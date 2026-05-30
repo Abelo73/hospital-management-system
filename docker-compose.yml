@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: hms-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: hospital_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: hms-redis
+    restart: always
+    ports:
+      - "6380:6379"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: hms-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@hospital.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+
+  minio:
+    image: minio/minio
+    container_name: hms-minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    volumes:
+      - minio_data:/data
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: hms-mailhog
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: hms-prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    container_name: hms-grafana
+    restart: always
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  postgres_data:
+  minio_data:
+  grafana_data:
