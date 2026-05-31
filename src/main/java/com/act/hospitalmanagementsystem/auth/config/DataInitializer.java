@@ -247,6 +247,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setAccountNonExpired(true);
             admin.setAccountNonLocked(true);
             admin.setCredentialsNonExpired(true);
+            admin.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.APPROVED);
             admin.setRoles(Set.of(adminRole));
             
             userRepository.save(admin);

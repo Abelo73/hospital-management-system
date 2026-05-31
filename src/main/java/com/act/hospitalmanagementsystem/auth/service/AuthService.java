@@ -42,65 +42,71 @@ public class AuthService {
             throw new BadRequestException("Email already exists", "EMAIL_EXISTS");
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setPhoneNumber(request.getPhoneNumber());
-        
-        // Set approval status - user needs approval before being enabled
-        user.setApprovalStatus(ApprovalStatus.PENDING_SUBMISSION);
-        user.setSubmittedAt(LocalDateTime.now());
-        user.setEnabled(false); // Disabled until approved
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
+        try {
+            User user = new User();
+            user.setUsername(request.getUsername());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setEmail(request.getEmail());
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setPhoneNumber(request.getPhoneNumber());
+            
+            // Set approval status - user needs approval before being enabled
+            user.setApprovalStatus(ApprovalStatus.PENDING_SUBMISSION);
+            user.setSubmittedAt(LocalDateTime.now());
+            user.setEnabled(false); // Disabled until approved
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setCredentialsNonExpired(true);
 
-        // Determine if verification is required based on requested role
-        boolean requiresVerification = false;
-        Set<Role> roles = new HashSet<>();
-        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
-            for (String roleName : request.getRoles()) {
-                if (roleName.equals("DOCTOR") || roleName.equals("NURSE") || 
-                    roleName.equals("PHARMACIST") || roleName.equals("LAB_TECHNICIAN")) {
-                    requiresVerification = true;
+            // Determine if verification is required based on requested role
+            boolean requiresVerification = false;
+            Set<Role> roles = new HashSet<>();
+            if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+                for (String roleName : request.getRoles()) {
+                    if (roleName.equals("DOCTOR") || roleName.equals("NURSE") || 
+                        roleName.equals("PHARMACIST") || roleName.equals("LAB_TECHNICIAN")) {
+                        requiresVerification = true;
+                    }
+                    Role role = roleRepository.findByNameAndDeletedFalse(roleName)
+                            .orElseThrow(() -> new BadRequestException("Role not found: " + roleName, "ROLE_NOT_FOUND"));
+                    roles.add(role);
                 }
-                Role role = roleRepository.findByNameAndDeletedFalse(roleName)
-                        .orElseThrow(() -> new BadRequestException("Role not found: " + roleName, "ROLE_NOT_FOUND"));
-                roles.add(role);
             }
+            
+            user.setRequiresVerification(requiresVerification);
+            if (requiresVerification) {
+                user.setApprovalStatus(ApprovalStatus.PENDING_VERIFICATION);
+            }
+            
+            // Don't assign roles yet - they'll be assigned after approval
+            user.setRoles(new HashSet<>());
+
+            User savedUser = userRepository.save(user);
+
+            // Return tokens but user won't be able to access protected endpoints until approved
+            String accessToken = jwtService.generateToken(savedUser.getUsername());
+            String refreshToken = jwtService.generateRefreshToken(savedUser.getUsername());
+
+            return LoginResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .tokenType("Bearer")
+                    .userId(savedUser.getId())
+                    .username(savedUser.getUsername())
+                    .email(savedUser.getEmail())
+                    .firstName(savedUser.getFirstName())
+                    .lastName(savedUser.getLastName())
+                    .roles(new HashSet<>()) // Empty until approved
+                    .permissions(new HashSet<>()) // Empty until approved
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BadRequestException("Registration failed: " + e.getMessage(), "REGISTRATION_FAILED");
         }
-        
-        user.setRequiresVerification(requiresVerification);
-        if (requiresVerification) {
-            user.setApprovalStatus(ApprovalStatus.PENDING_VERIFICATION);
-        }
-        
-        // Don't assign roles yet - they'll be assigned after approval
-        user.setRoles(new HashSet<>());
-
-        User savedUser = userRepository.save(user);
-
-        // Return tokens but user won't be able to access protected endpoints until approved
-        String accessToken = jwtService.generateToken(savedUser.getUsername());
-        String refreshToken = jwtService.generateRefreshToken(savedUser.getUsername());
-
-        return LoginResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .tokenType("Bearer")
-                .userId(savedUser.getId())
-                .username(savedUser.getUsername())
-                .email(savedUser.getEmail())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
-                .roles(new HashSet<>()) // Empty until approved
-                .permissions(new HashSet<>()) // Empty until approved
-                .build();
     }
 
+    @Transactional
     public LoginResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -152,6 +158,21 @@ public class AuthService {
         String accessToken = jwtService.generateToken(user.getUsername());
         String refreshToken = jwtService.generateRefreshToken(user.getUsername());
 
+        Set<String> roleNames = user.getRoles() != null 
+                ? user.getRoles().stream().map(Role::getName).collect(Collectors.toSet())
+                : new HashSet<>();
+        
+        Set<String> permissionNames = new HashSet<>();
+        if (user.getRoles() != null) {
+            for (Role role : user.getRoles()) {
+                if (role.getPermissions() != null) {
+                    permissionNames.addAll(role.getPermissions().stream()
+                            .map(permission -> permission.getName())
+                            .collect(Collectors.toSet()));
+                }
+            }
+        }
+
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -161,14 +182,12 @@ public class AuthService {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
-                .permissions(user.getRoles().stream()
-                        .flatMap(role -> role.getPermissions().stream())
-                        .map(permission -> permission.getName())
-                        .collect(Collectors.toSet()))
+                .roles(roleNames)
+                .permissions(permissionNames)
                 .build();
     }
 
+    @Transactional
     public LoginResponse refreshToken(String refreshToken) {
         String username = jwtService.extractUsername(refreshToken);
 
@@ -180,6 +199,21 @@ public class AuthService {
                 String newAccessToken = jwtService.generateToken(username);
                 String newRefreshToken = jwtService.generateRefreshToken(username);
 
+                Set<String> roleNames = user.getRoles() != null 
+                        ? user.getRoles().stream().map(Role::getName).collect(Collectors.toSet())
+                        : new HashSet<>();
+                
+                Set<String> permissionNames = new HashSet<>();
+                if (user.getRoles() != null) {
+                    for (Role role : user.getRoles()) {
+                        if (role.getPermissions() != null) {
+                            permissionNames.addAll(role.getPermissions().stream()
+                                    .map(permission -> permission.getName())
+                                    .collect(Collectors.toSet()));
+                        }
+                    }
+                }
+
                 return LoginResponse.builder()
                         .accessToken(newAccessToken)
                         .refreshToken(newRefreshToken)
@@ -189,11 +223,8 @@ public class AuthService {
                         .email(user.getEmail())
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
-                        .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
-                        .permissions(user.getRoles().stream()
-                                .flatMap(role -> role.getPermissions().stream())
-                                .map(permission -> permission.getName())
-                                .collect(Collectors.toSet()))
+                        .roles(roleNames)
+                        .permissions(permissionNames)
                         .build();
             }
         }

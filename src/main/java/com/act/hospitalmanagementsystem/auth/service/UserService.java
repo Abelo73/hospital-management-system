@@ -12,6 +12,8 @@ import com.act.hospitalmanagementsystem.auth.repository.UserRepository;
 import com.act.hospitalmanagementsystem.common.exception.BadRequestException;
 import com.act.hospitalmanagementsystem.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,21 @@ public class UserService {
     }
 
     public UserDTO getUserByUsername(String username) {
+        User user = userRepository.findByUsernameAndDeletedFalse(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        UserDTO dto = userMapper.toDTO(user);
+        dto.setRoles(user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet()));
+        return dto;
+    }
+
+    public UserDTO getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResourceNotFoundException("User", "authenticated", null);
+        }
+        String username = authentication.getName();
         User user = userRepository.findByUsernameAndDeletedFalse(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
         UserDTO dto = userMapper.toDTO(user);

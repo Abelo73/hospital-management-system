@@ -43,6 +43,12 @@ public class UserController {
         return ResponseEntity.ok(BaseResponseDTO.success(user));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<BaseResponseDTO<UserDTO>> getCurrentUser() {
+        UserDTO user = userService.getCurrentUser();
+        return ResponseEntity.ok(BaseResponseDTO.success(user));
+    }
+
     @PostMapping
     @PreAuthorize("hasAuthority('USER_WRITE')")
     public ResponseEntity<BaseResponseDTO<UserDTO>> createUser(@Valid @RequestBody CreateUserRequest request) {

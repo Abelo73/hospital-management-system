@@ -66,7 +66,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponseDTO<Void>> handleGenericException(Exception ex) {
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(BaseResponseDTO.error("An unexpected error occurred", "INTERNAL_SERVER_ERROR"));
+                .body(BaseResponseDTO.error("An unexpected error occurred: " + ex.getMessage(), "INTERNAL_SERVER_ERROR"));
     }
 }

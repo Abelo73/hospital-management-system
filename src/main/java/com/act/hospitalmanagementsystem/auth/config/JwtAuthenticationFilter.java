@@ -41,6 +41,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
+        
+        if (jwt == null || jwt.trim().isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+        // Validate JWT format (must contain at least 2 periods for header.payload.signature)
+        if (jwt.chars().filter(ch -> ch == '.').count() < 2) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         username = jwtService.extractUsername(jwt);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
