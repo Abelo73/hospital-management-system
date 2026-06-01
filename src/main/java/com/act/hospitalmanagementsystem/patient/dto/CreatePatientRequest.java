@@ -37,7 +37,7 @@ public class CreatePatientRequest {
 
     private BloodType bloodType;
 
-    @Pattern(regexp = "^\\+?[0-9]{10,20}$", message = "Invalid phone number format")
+    @Pattern(regexp = "^\\+?[0-9]{7,20}$", message = "Invalid phone number format")
     private String phoneNumber;
 
     @Email(message = "Invalid email format")
@@ -62,7 +62,7 @@ public class CreatePatientRequest {
     @Size(max = 100, message = "Emergency contact name must not exceed 100 characters")
     private String emergencyContactName;
 
-    @Pattern(regexp = "^\\+?[0-9]{10,20}$", message = "Invalid emergency contact phone format")
+    @Pattern(regexp = "^\\+?[0-9]{7,20}$", message = "Invalid emergency contact phone format")
     private String emergencyContactPhone;
 
     @Size(max = 50, message = "Emergency contact relationship must not exceed 50 characters")

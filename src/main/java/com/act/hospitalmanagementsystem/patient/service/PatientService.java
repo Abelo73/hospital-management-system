@@ -10,6 +10,10 @@ import com.act.hospitalmanagementsystem.patient.enums.PatientStatus;
 import com.act.hospitalmanagementsystem.patient.mapper.PatientMapper;
 import com.act.hospitalmanagementsystem.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,13 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+
+    public Page<PatientDTO> getAllPatients(int page, int size, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Patient> patients = patientRepository.findByDeletedFalse(pageable);
+        return patients.map(patientMapper::toDTO);
+    }
 
     public List<PatientDTO> getAllPatients() {
         List<Patient> patients = patientRepository.findByDeletedFalse();
@@ -39,6 +50,13 @@ public class PatientService {
         Patient patient = patientRepository.findByMedicalRecordNumberAndDeletedFalse(medicalRecordNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", "medicalRecordNumber", medicalRecordNumber));
         return patientMapper.toDTO(patient);
+    }
+
+    public Page<PatientDTO> searchPatients(String searchTerm, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Patient> patients = patientRepository.searchPatients(searchTerm, pageable);
+        return patients.map(patientMapper::toDTO);
     }
 
     public List<PatientDTO> searchPatients(String searchTerm) {

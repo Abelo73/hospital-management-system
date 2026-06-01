@@ -2,6 +2,8 @@ package com.act.hospitalmanagementsystem.patient.repository;
 
 import com.act.hospitalmanagementsystem.patient.entity.Patient;
 import com.act.hospitalmanagementsystem.patient.enums.PatientStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,9 +21,21 @@ public interface PatientRepository extends JpaRepository<Patient, UUID> {
 
     Optional<Patient> findByIdAndDeletedFalse(UUID id);
 
+    Page<Patient> findByDeletedFalse(Pageable pageable);
+
     List<Patient> findByDeletedFalse();
 
+    Page<Patient> findByStatusAndDeletedFalse(PatientStatus status, Pageable pageable);
+
     List<Patient> findByStatusAndDeletedFalse(PatientStatus status);
+
+    @Query("SELECT p FROM Patient p WHERE p.deleted = false AND " +
+           "(LOWER(p.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(p.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(p.medicalRecordNumber) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(p.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(p.phoneNumber) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+    Page<Patient> searchPatients(@Param("searchTerm") String searchTerm, Pageable pageable);
 
     @Query("SELECT p FROM Patient p WHERE p.deleted = false AND " +
            "(LOWER(p.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +

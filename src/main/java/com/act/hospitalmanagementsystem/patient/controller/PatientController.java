@@ -8,6 +8,7 @@ import com.act.hospitalmanagementsystem.patient.enums.PatientStatus;
 import com.act.hospitalmanagementsystem.patient.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,13 @@ public class PatientController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('PATIENT_READ')")
-    public ResponseEntity<BaseResponseDTO<List<PatientDTO>>> getAllPatients() {
-        List<PatientDTO> patients = patientService.getAllPatients();
+    public ResponseEntity<BaseResponseDTO<Page<PatientDTO>>> getAllPatients(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection
+    ) {
+        Page<PatientDTO> patients = patientService.getAllPatients(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(BaseResponseDTO.success(patients));
     }
 
@@ -45,8 +51,14 @@ public class PatientController {
 
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('PATIENT_READ')")
-    public ResponseEntity<BaseResponseDTO<List<PatientDTO>>> searchPatients(@RequestParam String searchTerm) {
-        List<PatientDTO> patients = patientService.searchPatients(searchTerm);
+    public ResponseEntity<BaseResponseDTO<Page<PatientDTO>>> searchPatients(
+            @RequestParam String searchTerm,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection
+    ) {
+        Page<PatientDTO> patients = patientService.searchPatients(searchTerm, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(BaseResponseDTO.success(patients));
     }
 
