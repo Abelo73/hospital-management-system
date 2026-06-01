@@ -77,7 +77,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "requires_verification", nullable = false)
     private Boolean requiresVerification = false;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -39,69 +39,79 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initializePermissions() {
-        if (permissionRepository.count() == 0) {
-            log.info("Creating default permissions...");
-            
-            String[] permissionNames = {
-                // User permissions
-                "USER_READ", "USER_WRITE", "USER_DELETE",
-                // Role permissions
-                "ROLE_READ", "ROLE_WRITE", "ROLE_DELETE",
-                // Permission permissions
-                "PERMISSION_READ", "PERMISSION_WRITE", "PERMISSION_DELETE",
-                // Patient permissions
-                "PATIENT_READ", "PATIENT_WRITE", "PATIENT_DELETE",
-                // Appointment permissions
-                "APPOINTMENT_READ", "APPOINTMENT_WRITE", "APPOINTMENT_DELETE",
-                // Doctor permissions
-                "DOCTOR_READ", "DOCTOR_WRITE", "DOCTOR_DELETE",
-                // Consultation permissions
-                "CONSULTATION_READ", "CONSULTATION_WRITE", "CONSULTATION_DELETE",
-                // Prescription permissions
-                "PRESCRIPTION_READ", "PRESCRIPTION_WRITE", "PRESCRIPTION_DELETE",
-                // Laboratory permissions
-                "LABORATORY_READ", "LABORATORY_WRITE", "LABORATORY_DELETE",
-                // Pharmacy permissions
-                "PHARMACY_READ", "PHARMACY_WRITE", "PHARMACY_DELETE",
-                // Billing permissions
-                "BILLING_READ", "BILLING_WRITE", "BILLING_DELETE",
-                // Inventory permissions
-                "INVENTORY_READ", "INVENTORY_WRITE", "INVENTORY_DELETE",
-                // HR permissions
-                "HR_READ", "HR_WRITE", "HR_DELETE",
-                // Nursing permissions
-                "NURSING_READ", "NURSING_WRITE", "NURSING_DELETE",
-                // Analytics permissions
-                "ANALYTICS_READ",
-                // Admin permissions
-                "ADMIN_READ", "ADMIN_WRITE"
-            };
+        log.info("Ensuring all default permissions exist...");
+        
+        String[] permissionNames = {
+            // User permissions
+            "USER_READ", "USER_WRITE", "USER_DELETE",
+            // Role permissions
+            "ROLE_READ", "ROLE_WRITE", "ROLE_DELETE",
+            // Permission permissions
+            "PERMISSION_READ", "PERMISSION_WRITE", "PERMISSION_DELETE",
+            // Patient permissions
+            "PATIENT_READ", "PATIENT_WRITE", "PATIENT_DELETE",
+            // Appointment permissions
+            "APPOINTMENT_READ", "APPOINTMENT_WRITE", "APPOINTMENT_DELETE",
+            // Doctor permissions
+            "DOCTOR_READ", "DOCTOR_WRITE", "DOCTOR_DELETE",
+            // Consultation permissions
+            "CONSULTATION_READ", "CONSULTATION_WRITE", "CONSULTATION_DELETE",
+            // Prescription permissions
+            "PRESCRIPTION_READ", "PRESCRIPTION_WRITE", "PRESCRIPTION_DELETE",
+            // Laboratory permissions
+            "LABORATORY_READ", "LABORATORY_WRITE", "LABORATORY_DELETE",
+            // Pharmacy permissions
+            "PHARMACY_READ", "PHARMACY_WRITE", "PHARMACY_DELETE",
+            // Billing permissions
+            "BILLING_READ", "BILLING_WRITE", "BILLING_DELETE",
+            // Inventory permissions
+            "INVENTORY_READ", "INVENTORY_WRITE", "INVENTORY_DELETE",
+            // HR permissions
+            "HR_READ", "HR_WRITE", "HR_DELETE",
+            // Nursing permissions
+            "NURSING_READ", "NURSING_WRITE", "NURSING_DELETE",
+            // Analytics permissions
+            "ANALYTICS_READ",
+            // Admin permissions
+            "ADMIN_READ", "ADMIN_WRITE",
+            // Approval permissions
+            "APPROVAL_READ", "APPROVAL_WRITE"
+        };
 
-            for (String permissionName : permissionNames) {
+        int created = 0;
+        for (String permissionName : permissionNames) {
+            if (!permissionRepository.existsByName(permissionName)) {
                 Permission permission = new Permission();
                 permission.setName(permissionName);
                 permission.setDescription("Permission to " + permissionName.replace("_", " ").toLowerCase());
                 permissionRepository.save(permission);
+                created++;
             }
-            
-            log.info("Created {} default permissions.", permissionNames.length);
+        }
+        
+        if (created > 0) {
+            log.info("Created {} new permissions.", created);
         } else {
-            log.info("Permissions already exist, skipping initialization.");
+            log.info("All permissions already exist.");
         }
     }
 
     private void initializeRoles() {
-        if (roleRepository.count() == 0) {
-            log.info("Creating default roles...");
-            
-            // Create ADMIN role with all permissions
-            Role adminRole = new Role();
-            adminRole.setName("ADMIN");
-            adminRole.setDescription("Administrator with full access");
-            adminRole.setPermissions(new HashSet<>(permissionRepository.findAll()));
-            roleRepository.save(adminRole);
-            
-            // Create DOCTOR role
+        // Always sync ADMIN role with all available permissions
+        Role adminRole = roleRepository.findByName("ADMIN").orElseGet(() -> {
+            log.info("Creating ADMIN role...");
+            Role r = new Role();
+            r.setName("ADMIN");
+            r.setDescription("Administrator with full access");
+            return r;
+        });
+        adminRole.setPermissions(new HashSet<>(permissionRepository.findAll()));
+        roleRepository.save(adminRole);
+        log.info("ADMIN role synchronized with all permissions ({} total).", adminRole.getPermissions().size());
+
+        // Create other roles only if they don't exist
+        if (roleRepository.count() <= 1) {
+            log.info("Creating default non-admin roles...");
             Role doctorRole = new Role();
             doctorRole.setName("DOCTOR");
             doctorRole.setDescription("Doctor with medical access");

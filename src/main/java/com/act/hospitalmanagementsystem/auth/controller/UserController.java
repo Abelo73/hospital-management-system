@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -27,6 +27,12 @@ public class UserController {
     public ResponseEntity<BaseResponseDTO<List<UserDTO>>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(BaseResponseDTO.success(users));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<BaseResponseDTO<UserDTO>> getCurrentUser() {
+        UserDTO user = userService.getCurrentUser();
+        return ResponseEntity.ok(BaseResponseDTO.success(user));
     }
 
     @GetMapping("/{id}")
@@ -40,12 +46,6 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER_READ')")
     public ResponseEntity<BaseResponseDTO<UserDTO>> getUserByUsername(@PathVariable String username) {
         UserDTO user = userService.getUserByUsername(username);
-        return ResponseEntity.ok(BaseResponseDTO.success(user));
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<BaseResponseDTO<UserDTO>> getCurrentUser() {
-        UserDTO user = userService.getCurrentUser();
         return ResponseEntity.ok(BaseResponseDTO.success(user));
     }
 
