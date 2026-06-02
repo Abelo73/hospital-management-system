@@ -202,4 +202,30 @@ public class UserService {
             userRepository.save(user);
         }
     }
+
+    public List<UserDTO> getUsersByRole(String roleName) {
+        List<User> users = userRepository.findByRoleName(roleName);
+        return users.stream()
+                .map(user -> {
+                    UserDTO dto = userMapper.toDTO(user);
+                    dto.setRoles(user.getRoles().stream()
+                            .map(Role::getName)
+                            .collect(Collectors.toSet()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> searchUsersByRole(String roleName, String searchTerm) {
+        List<User> users = userRepository.findByRoleNameAndSearchTerm(roleName, searchTerm);
+        return users.stream()
+                .map(user -> {
+                    UserDTO dto = userMapper.toDTO(user);
+                    dto.setRoles(user.getRoles().stream()
+                            .map(Role::getName)
+                            .collect(Collectors.toSet()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

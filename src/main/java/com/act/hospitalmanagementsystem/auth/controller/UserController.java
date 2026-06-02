@@ -90,4 +90,21 @@ public class UserController {
         userService.removeRole(id, roleName);
         return ResponseEntity.ok(BaseResponseDTO.success("Role removed successfully", null));
     }
+
+    @GetMapping("/role/{roleName}")
+    @PreAuthorize("hasAuthority('USER_READ')")
+    public ResponseEntity<BaseResponseDTO<List<UserDTO>>> getUsersByRole(@PathVariable String roleName) {
+        List<UserDTO> users = userService.getUsersByRole(roleName);
+        return ResponseEntity.ok(BaseResponseDTO.success(users));
+    }
+
+    @GetMapping("/role/{roleName}/search")
+    @PreAuthorize("hasAuthority('USER_READ')")
+    public ResponseEntity<BaseResponseDTO<List<UserDTO>>> searchUsersByRole(
+            @PathVariable String roleName,
+            @RequestParam String searchTerm
+    ) {
+        List<UserDTO> users = userService.searchUsersByRole(roleName, searchTerm);
+        return ResponseEntity.ok(BaseResponseDTO.success(users));
+    }
 }
