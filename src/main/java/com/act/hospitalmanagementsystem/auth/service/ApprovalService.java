@@ -34,6 +34,35 @@ public class ApprovalService {
 
     public List<ApprovalRequestDTO> getPendingApprovals() {
         List<ApprovalRequest> requests = approvalRequestRepository.findByStatus(ApprovalStatus.PENDING_APPROVAL);
+        
+        // Also include users with PENDING_APPROVAL status who don't have approval requests
+        List<User> usersWithPendingApproval = userRepository.findAll().stream()
+                .filter(user -> user.getApprovalStatus() == ApprovalStatus.PENDING_APPROVAL)
+                .filter(user -> requests.stream().noneMatch(req -> req.getUser().getId().equals(user.getId())))
+                .collect(Collectors.toList());
+        
+        // Create approval request DTOs for users without requests
+        for (User user : usersWithPendingApproval) {
+            ApprovalRequestDTO dto = ApprovalRequestDTO.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .requestType("USER_CREATION")
+                    .requestedRole(user.getRoles().stream().map(Role::getName).findFirst().orElse(null))
+                    .status(ApprovalStatus.PENDING_APPROVAL)
+                    .priority(5)
+                    .submittedAt(user.getSubmittedAt() != null ? user.getSubmittedAt() : user.getCreatedAt())
+                    .submittedBy("SYSTEM")
+                    .documentsRequired(false)
+                    .documentsVerified(true)
+                    .createdAt(user.getCreatedAt())
+                    .updatedAt(user.getUpdatedAt())
+                    .build();
+            requests.add(0, new ApprovalRequest()); // Placeholder to maintain list structure
+        }
+        
         return requests.stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
@@ -113,6 +142,9 @@ public class ApprovalService {
                 .orElseThrow(() -> new ResourceNotFoundException("Approval request", "id", requestId));
 
         User user = request.getUser();
+        if (user == null) {
+            throw new ResourceNotFoundException("User", "id", requestId);
+        }
 
         switch (actionRequest.getAction().toUpperCase()) {
             case "APPROVE":

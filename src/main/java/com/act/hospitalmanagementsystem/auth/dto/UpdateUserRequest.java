@@ -4,9 +4,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+import java.util.Set;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateUserRequest {
@@ -23,4 +28,8 @@ public class UpdateUserRequest {
     private String email;
 
     private Boolean enabled;
+
+    private String approvalStatus;
+
+    private Set<String> roles;
 }

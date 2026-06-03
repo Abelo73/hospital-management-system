@@ -4,9 +4,12 @@ import com.act.hospitalmanagementsystem.auth.dto.CreateUserRequest;
 import com.act.hospitalmanagementsystem.auth.dto.ResetPasswordRequest;
 import com.act.hospitalmanagementsystem.auth.dto.UpdateUserRequest;
 import com.act.hospitalmanagementsystem.auth.dto.UserDTO;
+import com.act.hospitalmanagementsystem.auth.entity.ApprovalRequest;
 import com.act.hospitalmanagementsystem.auth.entity.Role;
 import com.act.hospitalmanagementsystem.auth.entity.User;
+import com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus;
 import com.act.hospitalmanagementsystem.auth.mapper.UserMapper;
+import com.act.hospitalmanagementsystem.auth.repository.ApprovalRequestRepository;
 import com.act.hospitalmanagementsystem.auth.repository.RoleRepository;
 import com.act.hospitalmanagementsystem.auth.repository.UserRepository;
 import com.act.hospitalmanagementsystem.common.exception.BadRequestException;
@@ -18,20 +21,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ApprovalRequestRepository approvalRequestRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsernameAndDeletedFalse(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        return user;
+    }
 
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -41,6 +57,7 @@ public class UserService {
                     dto.setRoles(user.getRoles().stream()
                             .map(Role::getName)
                             .collect(Collectors.toSet()));
+                    dto.setApprovalStatus(user.getApprovalStatus().name());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -53,6 +70,7 @@ public class UserService {
         dto.setRoles(user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet()));
+        dto.setApprovalStatus(user.getApprovalStatus().name());
         return dto;
     }
 
@@ -63,6 +81,7 @@ public class UserService {
         dto.setRoles(user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet()));
+        dto.setApprovalStatus(user.getApprovalStatus().name());
         return dto;
     }
 
@@ -78,6 +97,7 @@ public class UserService {
         dto.setRoles(user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet()));
+        dto.setApprovalStatus(user.getApprovalStatus().name());
         return dto;
     }
 
@@ -118,10 +138,32 @@ public class UserService {
         user.setRoles(roles);
 
         User savedUser = userRepository.save(user);
+
+        // Automatically create an approval request for the new user
+        if (savedUser.getApprovalStatus() == ApprovalStatus.PENDING_SUBMISSION) {
+            ApprovalRequest approvalRequest = new ApprovalRequest();
+            approvalRequest.setUser(savedUser);
+            approvalRequest.setRequestType("USER_CREATION");
+            approvalRequest.setRequestedRole(roles.stream().map(Role::getName).findFirst().orElse(null));
+            approvalRequest.setStatus(ApprovalStatus.PENDING_APPROVAL);
+            approvalRequest.setPriority(5);
+            approvalRequest.setSubmittedAt(LocalDateTime.now());
+            approvalRequest.setSubmittedBy("SYSTEM");
+            approvalRequest.setDocumentsRequired(false);
+            approvalRequest.setDocumentsVerified(true);
+            approvalRequestRepository.save(approvalRequest);
+
+            // Update user status to PENDING_APPROVAL
+            savedUser.setApprovalStatus(ApprovalStatus.PENDING_APPROVAL);
+            savedUser.setSubmittedAt(LocalDateTime.now());
+            userRepository.save(savedUser);
+        }
+
         UserDTO dto = userMapper.toDTO(savedUser);
         dto.setRoles(savedUser.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet()));
+        dto.setApprovalStatus(savedUser.getApprovalStatus().name());
         return dto;
     }
 
@@ -153,11 +195,30 @@ public class UserService {
             user.setEnabled(request.getEnabled());
         }
 
+        if (request.getApprovalStatus() != null) {
+            try {
+                user.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.valueOf(request.getApprovalStatus()));
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Invalid approval status", "INVALID_APPROVAL_STATUS");
+            }
+        }
+
+        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+            Set<Role> newRoles = new HashSet<>();
+            for (String roleName : request.getRoles()) {
+                Role role = roleRepository.findByNameAndDeletedFalse(roleName)
+                        .orElseThrow(() -> new ResourceNotFoundException("Role", "name", roleName));
+                newRoles.add(role);
+            }
+            user.setRoles(newRoles);
+        }
+
         User updatedUser = userRepository.save(user);
         UserDTO dto = userMapper.toDTO(updatedUser);
         dto.setRoles(updatedUser.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet()));
+        dto.setApprovalStatus(updatedUser.getApprovalStatus().name());
         return dto;
     }
 
@@ -211,6 +272,7 @@ public class UserService {
                     dto.setRoles(user.getRoles().stream()
                             .map(Role::getName)
                             .collect(Collectors.toSet()));
+                    dto.setApprovalStatus(user.getApprovalStatus().name());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -224,6 +286,7 @@ public class UserService {
                     dto.setRoles(user.getRoles().stream()
                             .map(Role::getName)
                             .collect(Collectors.toSet()));
+                    dto.setApprovalStatus(user.getApprovalStatus().name());
                     return dto;
                 })
                 .collect(Collectors.toList());

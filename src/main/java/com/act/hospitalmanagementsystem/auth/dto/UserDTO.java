@@ -22,6 +22,7 @@ public class UserDTO {
     private String phoneNumber;
     private Boolean enabled;
     private Set<String> roles;
+    private String approvalStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
