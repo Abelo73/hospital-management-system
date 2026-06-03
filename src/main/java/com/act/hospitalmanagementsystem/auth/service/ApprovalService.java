@@ -32,35 +32,38 @@ public class ApprovalService {
     private final RoleRepository roleRepository;
     private final UserDocumentRepository userDocumentRepository;
 
+    @Transactional
     public List<ApprovalRequestDTO> getPendingApprovals() {
         List<ApprovalRequest> requests = approvalRequestRepository.findByStatus(ApprovalStatus.PENDING_APPROVAL);
         
-        // Also include users with PENDING_APPROVAL status who don't have approval requests
+        // Also include users with PENDING_APPROVAL or PENDING_SUBMISSION status who don't have approval requests
         List<User> usersWithPendingApproval = userRepository.findAll().stream()
-                .filter(user -> user.getApprovalStatus() == ApprovalStatus.PENDING_APPROVAL)
-                .filter(user -> requests.stream().noneMatch(req -> req.getUser().getId().equals(user.getId())))
+                .filter(user -> user.getApprovalStatus() == ApprovalStatus.PENDING_APPROVAL || 
+                              user.getApprovalStatus() == ApprovalStatus.PENDING_SUBMISSION)
+                .filter(user -> requests.stream().noneMatch(req -> req.getUser() != null && req.getUser().getId().equals(user.getId())))
                 .collect(Collectors.toList());
         
-        // Create approval request DTOs for users without requests
+        // Create approval request entities for users without requests
         for (User user : usersWithPendingApproval) {
-            ApprovalRequestDTO dto = ApprovalRequestDTO.builder()
-                    .userId(user.getId())
-                    .username(user.getUsername())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .email(user.getEmail())
-                    .requestType("USER_CREATION")
-                    .requestedRole(user.getRoles().stream().map(Role::getName).findFirst().orElse(null))
-                    .status(ApprovalStatus.PENDING_APPROVAL)
-                    .priority(5)
-                    .submittedAt(user.getSubmittedAt() != null ? user.getSubmittedAt() : user.getCreatedAt())
-                    .submittedBy("SYSTEM")
-                    .documentsRequired(false)
-                    .documentsVerified(true)
-                    .createdAt(user.getCreatedAt())
-                    .updatedAt(user.getUpdatedAt())
-                    .build();
-            requests.add(0, new ApprovalRequest()); // Placeholder to maintain list structure
+            ApprovalRequest approvalRequest = new ApprovalRequest();
+            approvalRequest.setUser(user);
+            approvalRequest.setRequestType("USER_CREATION");
+            approvalRequest.setRequestedRole(user.getRoles().stream().map(Role::getName).findFirst().orElse(null));
+            approvalRequest.setStatus(ApprovalStatus.PENDING_APPROVAL);
+            approvalRequest.setPriority(5);
+            approvalRequest.setSubmittedAt(user.getSubmittedAt() != null ? user.getSubmittedAt() : user.getCreatedAt());
+            approvalRequest.setSubmittedBy("SYSTEM");
+            approvalRequest.setDocumentsRequired(false);
+            approvalRequest.setDocumentsVerified(true);
+            approvalRequest = approvalRequestRepository.save(approvalRequest);
+            requests.add(approvalRequest);
+            
+            // Update user status to PENDING_APPROVAL if it was PENDING_SUBMISSION
+            if (user.getApprovalStatus() == ApprovalStatus.PENDING_SUBMISSION) {
+                user.setApprovalStatus(ApprovalStatus.PENDING_APPROVAL);
+                user.setSubmittedAt(LocalDateTime.now());
+                userRepository.save(user);
+            }
         }
         
         return requests.stream()
