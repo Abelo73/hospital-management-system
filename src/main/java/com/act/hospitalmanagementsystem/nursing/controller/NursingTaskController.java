@@ -30,21 +30,18 @@ public class NursingTaskController {
     private final NursingTaskService nursingTaskService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingTaskDTO>> createNursingTask(@Valid @RequestBody CreateNursingTaskRequest request) {
         NursingTaskDTO task = nursingTaskService.createNursingTask(request);
         return ResponseEntity.ok(BaseResponseDTO.success(task));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<NursingTaskDTO>> getNursingTaskById(@PathVariable UUID id) {
         NursingTaskDTO task = nursingTaskService.getNursingTaskById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(task));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> getNursingTasksByPatientId(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -59,7 +56,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/assigned-to/{assignedTo}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> getNursingTasksByAssignedTo(
             @PathVariable UUID assignedTo,
             @RequestParam(defaultValue = "0") int page,
@@ -74,7 +70,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> getNursingTasksByStatus(
             @PathVariable TaskStatus status,
             @RequestParam(defaultValue = "0") int page,
@@ -89,7 +84,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/priority/{priority}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> getNursingTasksByPriority(
             @PathVariable TaskPriority priority,
             @RequestParam(defaultValue = "0") int page,
@@ -104,7 +98,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/category/{taskCategory}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> getNursingTasksByCategory(
             @PathVariable TaskCategory taskCategory,
             @RequestParam(defaultValue = "0") int page,
@@ -119,7 +112,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/scheduled/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<java.util.List<NursingTaskDTO>>> getNursingTasksByScheduledDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
@@ -128,7 +120,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/overdue/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> getOverdueTasks(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam(defaultValue = "0") int page,
@@ -143,7 +134,6 @@ public class NursingTaskController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingTaskDTO>>> searchNursingTasks(
             @RequestParam String searchTerm,
             @RequestParam(defaultValue = "0") int page,
@@ -158,7 +148,6 @@ public class NursingTaskController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingTaskDTO>> updateNursingTask(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateNursingTaskRequest request
@@ -168,7 +157,6 @@ public class NursingTaskController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteNursingTask(@PathVariable UUID id) {
         nursingTaskService.deleteNursingTask(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

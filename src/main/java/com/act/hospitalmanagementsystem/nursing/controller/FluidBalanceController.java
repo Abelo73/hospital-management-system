@@ -29,28 +29,24 @@ public class FluidBalanceController {
     private final FluidBalanceService fluidBalanceService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<FluidBalanceDTO>> createFluidBalance(@Valid @RequestBody CreateFluidBalanceRequest request) {
         FluidBalanceDTO fluidBalance = fluidBalanceService.createFluidBalance(request);
         return ResponseEntity.ok(BaseResponseDTO.success(fluidBalance));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<FluidBalanceDTO>> getFluidBalanceById(@PathVariable UUID id) {
         FluidBalanceDTO fluidBalance = fluidBalanceService.getFluidBalanceById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(fluidBalance));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<FluidBalanceDTO>>> getFluidBalanceByPatientId(@PathVariable UUID patientId) {
         List<FluidBalanceDTO> fluidBalanceList = fluidBalanceService.getFluidBalanceByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(fluidBalanceList));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<FluidBalanceDTO>>> getFluidBalanceByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -65,7 +61,6 @@ public class FluidBalanceController {
     }
 
     @GetMapping("/shift/{shift}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<FluidBalanceDTO>>> getFluidBalanceByShift(
             @PathVariable ShiftType shift,
             @RequestParam(defaultValue = "0") int page,
@@ -80,7 +75,6 @@ public class FluidBalanceController {
     }
 
     @GetMapping("/patient/{patientId}/shift/{shift}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<FluidBalanceDTO>>> getFluidBalanceByPatientIdAndShift(
             @PathVariable UUID patientId,
             @PathVariable ShiftType shift,
@@ -96,7 +90,6 @@ public class FluidBalanceController {
     }
 
     @GetMapping("/date/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<FluidBalanceDTO>>> getFluidBalanceByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
@@ -105,7 +98,6 @@ public class FluidBalanceController {
     }
 
     @GetMapping("/patient/{patientId}/date-range")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<FluidBalanceDTO>>> getFluidBalanceByDateRange(
             @PathVariable UUID patientId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -122,7 +114,6 @@ public class FluidBalanceController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<FluidBalanceDTO>> updateFluidBalance(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateFluidBalanceRequest request
@@ -132,7 +123,6 @@ public class FluidBalanceController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteFluidBalance(@PathVariable UUID id) {
         fluidBalanceService.deleteFluidBalance(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

@@ -28,28 +28,24 @@ public class NursingCarePlanController {
     private final NursingCarePlanService nursingCarePlanService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingCarePlanDTO>> createCarePlan(@Valid @RequestBody CreateNursingCarePlanRequest request) {
         NursingCarePlanDTO carePlan = nursingCarePlanService.createCarePlan(request);
         return ResponseEntity.ok(BaseResponseDTO.success(carePlan));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<NursingCarePlanDTO>> getCarePlanById(@PathVariable UUID id) {
         NursingCarePlanDTO carePlan = nursingCarePlanService.getCarePlanById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(carePlan));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<NursingCarePlanDTO>>> getCarePlansByPatientId(@PathVariable UUID patientId) {
         List<NursingCarePlanDTO> carePlans = nursingCarePlanService.getCarePlansByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(carePlans));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingCarePlanDTO>>> getCarePlansByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -64,7 +60,6 @@ public class NursingCarePlanController {
     }
 
     @GetMapping("/type/{planType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingCarePlanDTO>>> getCarePlansByType(
             @PathVariable CarePlanType planType,
             @RequestParam(defaultValue = "0") int page,
@@ -79,7 +74,6 @@ public class NursingCarePlanController {
     }
 
     @GetMapping("/patient/{patientId}/type/{planType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingCarePlanDTO>>> getCarePlansByPatientIdAndType(
             @PathVariable UUID patientId,
             @PathVariable CarePlanType planType,
@@ -95,7 +89,6 @@ public class NursingCarePlanController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingCarePlanDTO>>> getCarePlansByStatus(
             @PathVariable CarePlanStatus status,
             @RequestParam(defaultValue = "0") int page,
@@ -110,7 +103,6 @@ public class NursingCarePlanController {
     }
 
     @GetMapping("/nurse/{primaryNurseId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingCarePlanDTO>>> getCarePlansByPrimaryNurse(
             @PathVariable UUID primaryNurseId,
             @RequestParam(defaultValue = "0") int page,
@@ -125,7 +117,6 @@ public class NursingCarePlanController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingCarePlanDTO>>> searchCarePlans(
             @RequestParam String searchTerm,
             @RequestParam(defaultValue = "0") int page,
@@ -140,7 +131,6 @@ public class NursingCarePlanController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingCarePlanDTO>> updateCarePlan(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateNursingCarePlanRequest request
@@ -150,7 +140,6 @@ public class NursingCarePlanController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteCarePlan(@PathVariable UUID id) {
         nursingCarePlanService.deleteCarePlan(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

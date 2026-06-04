@@ -29,28 +29,24 @@ public class NursingNoteController {
     private final NursingNoteService nursingNoteService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingNoteDTO>> createNursingNote(@Valid @RequestBody CreateNursingNoteRequest request) {
         NursingNoteDTO note = nursingNoteService.createNursingNote(request);
         return ResponseEntity.ok(BaseResponseDTO.success(note));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<NursingNoteDTO>> getNursingNoteById(@PathVariable UUID id) {
         NursingNoteDTO note = nursingNoteService.getNursingNoteById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(note));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<NursingNoteDTO>>> getNursingNotesByPatientId(@PathVariable UUID patientId) {
         List<NursingNoteDTO> notes = nursingNoteService.getNursingNotesByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(notes));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingNoteDTO>>> getNursingNotesByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -65,7 +61,6 @@ public class NursingNoteController {
     }
 
     @GetMapping("/type/{noteType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingNoteDTO>>> getNursingNotesByType(
             @PathVariable NoteType noteType,
             @RequestParam(defaultValue = "0") int page,
@@ -80,7 +75,6 @@ public class NursingNoteController {
     }
 
     @GetMapping("/patient/{patientId}/type/{noteType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingNoteDTO>>> getNursingNotesByPatientIdAndType(
             @PathVariable UUID patientId,
             @PathVariable NoteType noteType,
@@ -96,7 +90,6 @@ public class NursingNoteController {
     }
 
     @GetMapping("/nurse/{nurseId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingNoteDTO>>> getNursingNotesByNurseId(
             @PathVariable UUID nurseId,
             @RequestParam(defaultValue = "0") int page,
@@ -111,7 +104,6 @@ public class NursingNoteController {
     }
 
     @GetMapping("/date/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<NursingNoteDTO>>> getNursingNotesByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
@@ -120,7 +112,6 @@ public class NursingNoteController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingNoteDTO>>> searchNursingNotes(
             @RequestParam String searchTerm,
             @RequestParam(defaultValue = "0") int page,
@@ -135,7 +126,6 @@ public class NursingNoteController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingNoteDTO>> updateNursingNote(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateNursingNoteRequest request
@@ -145,7 +135,6 @@ public class NursingNoteController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteNursingNote(@PathVariable UUID id) {
         nursingNoteService.deleteNursingNote(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

@@ -29,28 +29,24 @@ public class WoundCareController {
     private final WoundCareService woundCareService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<WoundCareDTO>> createWoundCare(@Valid @RequestBody CreateWoundCareRequest request) {
         WoundCareDTO woundCare = woundCareService.createWoundCare(request);
         return ResponseEntity.ok(BaseResponseDTO.success(woundCare));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<WoundCareDTO>> getWoundCareById(@PathVariable UUID id) {
         WoundCareDTO woundCare = woundCareService.getWoundCareById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(woundCare));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<WoundCareDTO>>> getWoundCareByPatientId(@PathVariable UUID patientId) {
         List<WoundCareDTO> woundCareList = woundCareService.getWoundCareByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(woundCareList));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<WoundCareDTO>>> getWoundCareByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -65,7 +61,6 @@ public class WoundCareController {
     }
 
     @GetMapping("/type/{woundType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<WoundCareDTO>>> getWoundCareByType(
             @PathVariable WoundType woundType,
             @RequestParam(defaultValue = "0") int page,
@@ -80,7 +75,6 @@ public class WoundCareController {
     }
 
     @GetMapping("/patient/{patientId}/type/{woundType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<WoundCareDTO>>> getWoundCareByPatientIdAndType(
             @PathVariable UUID patientId,
             @PathVariable WoundType woundType,
@@ -96,7 +90,6 @@ public class WoundCareController {
     }
 
     @GetMapping("/assessed-by/{assessedBy}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<WoundCareDTO>>> getWoundCareByAssessedBy(
             @PathVariable UUID assessedBy,
             @RequestParam(defaultValue = "0") int page,
@@ -111,7 +104,6 @@ public class WoundCareController {
     }
 
     @GetMapping("/date/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<WoundCareDTO>>> getWoundCareByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
@@ -120,7 +112,6 @@ public class WoundCareController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<WoundCareDTO>>> searchWoundCare(
             @RequestParam String searchTerm,
             @RequestParam(defaultValue = "0") int page,
@@ -135,7 +126,6 @@ public class WoundCareController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<WoundCareDTO>> updateWoundCare(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateWoundCareRequest request
@@ -145,7 +135,6 @@ public class WoundCareController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteWoundCare(@PathVariable UUID id) {
         woundCareService.deleteWoundCare(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

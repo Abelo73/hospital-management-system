@@ -30,21 +30,18 @@ public class IncidentReportController {
     private final IncidentReportService incidentReportService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<IncidentReportDTO>> createIncidentReport(@Valid @RequestBody CreateIncidentReportRequest request) {
         IncidentReportDTO incidentReport = incidentReportService.createIncidentReport(request);
         return ResponseEntity.ok(BaseResponseDTO.success(incidentReport));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<IncidentReportDTO>> getIncidentReportById(@PathVariable UUID id) {
         IncidentReportDTO incidentReport = incidentReportService.getIncidentReportById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(incidentReport));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> getIncidentReportsByPatientId(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -59,7 +56,6 @@ public class IncidentReportController {
     }
 
     @GetMapping("/type/{incidentType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> getIncidentReportsByType(
             @PathVariable IncidentType incidentType,
             @RequestParam(defaultValue = "0") int page,
@@ -74,7 +70,6 @@ public class IncidentReportController {
     }
 
     @GetMapping("/severity/{severity}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> getIncidentReportsBySeverity(
             @PathVariable IncidentSeverity severity,
             @RequestParam(defaultValue = "0") int page,
@@ -89,7 +84,6 @@ public class IncidentReportController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> getIncidentReportsByStatus(
             @PathVariable IncidentStatus status,
             @RequestParam(defaultValue = "0") int page,
@@ -104,7 +98,6 @@ public class IncidentReportController {
     }
 
     @GetMapping("/reported-by/{reportedBy}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> getIncidentReportsByReportedBy(
             @PathVariable UUID reportedBy,
             @RequestParam(defaultValue = "0") int page,
@@ -119,7 +112,6 @@ public class IncidentReportController {
     }
 
     @GetMapping("/date-range")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> getIncidentReportsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -135,7 +127,6 @@ public class IncidentReportController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<IncidentReportDTO>>> searchIncidentReports(
             @RequestParam String searchTerm,
             @RequestParam(defaultValue = "0") int page,
@@ -150,7 +141,6 @@ public class IncidentReportController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<IncidentReportDTO>> updateIncidentReport(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateIncidentReportRequest request
@@ -160,7 +150,6 @@ public class IncidentReportController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteIncidentReport(@PathVariable UUID id) {
         incidentReportService.deleteIncidentReport(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

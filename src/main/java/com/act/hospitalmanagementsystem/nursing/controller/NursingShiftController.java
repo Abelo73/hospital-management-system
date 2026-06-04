@@ -30,21 +30,18 @@ public class NursingShiftController {
     private final NursingShiftService nursingShiftService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingShiftDTO>> createNursingShift(@Valid @RequestBody CreateNursingShiftRequest request) {
         NursingShiftDTO nursingShift = nursingShiftService.createNursingShift(request);
         return ResponseEntity.ok(BaseResponseDTO.success(nursingShift));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<NursingShiftDTO>> getNursingShiftById(@PathVariable UUID id) {
         NursingShiftDTO nursingShift = nursingShiftService.getNursingShiftById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(nursingShift));
     }
 
     @GetMapping("/date/{shiftDate}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<NursingShiftDTO>>> getNursingShiftsByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate shiftDate
     ) {
@@ -53,7 +50,6 @@ public class NursingShiftController {
     }
 
     @GetMapping("/date/{shiftDate}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingShiftDTO>>> getNursingShiftsByDatePaginated(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate shiftDate,
             @RequestParam(defaultValue = "0") int page,
@@ -68,7 +64,6 @@ public class NursingShiftController {
     }
 
     @GetMapping("/nurse/{nurseId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingShiftDTO>>> getNursingShiftsByNurseId(
             @PathVariable UUID nurseId,
             @RequestParam(defaultValue = "0") int page,
@@ -83,7 +78,6 @@ public class NursingShiftController {
     }
 
     @GetMapping("/type/{shiftType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingShiftDTO>>> getNursingShiftsByType(
             @PathVariable ShiftType shiftType,
             @RequestParam(defaultValue = "0") int page,
@@ -98,7 +92,6 @@ public class NursingShiftController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingShiftDTO>>> getNursingShiftsByStatus(
             @PathVariable ShiftRecordStatus status,
             @RequestParam(defaultValue = "0") int page,
@@ -113,7 +106,6 @@ public class NursingShiftController {
     }
 
     @GetMapping("/unit/{unit}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingShiftDTO>>> getNursingShiftsByUnit(
             @PathVariable String unit,
             @RequestParam(defaultValue = "0") int page,
@@ -128,7 +120,6 @@ public class NursingShiftController {
     }
 
     @GetMapping("/date-range")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingShiftDTO>>> getNursingShiftsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -144,7 +135,6 @@ public class NursingShiftController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingShiftDTO>> updateNursingShift(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateNursingShiftRequest request
@@ -154,7 +144,6 @@ public class NursingShiftController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteNursingShift(@PathVariable UUID id) {
         nursingShiftService.deleteNursingShift(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

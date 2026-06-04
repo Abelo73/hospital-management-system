@@ -29,28 +29,24 @@ public class NursingAssessmentController {
     private final NursingAssessmentService nursingAssessmentService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingAssessmentDTO>> createAssessment(@Valid @RequestBody CreateNursingAssessmentRequest request) {
         NursingAssessmentDTO assessment = nursingAssessmentService.createAssessment(request);
         return ResponseEntity.ok(BaseResponseDTO.success(assessment));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<NursingAssessmentDTO>> getAssessmentById(@PathVariable UUID id) {
         NursingAssessmentDTO assessment = nursingAssessmentService.getAssessmentById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(assessment));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<NursingAssessmentDTO>>> getAssessmentsByPatientId(@PathVariable UUID patientId) {
         List<NursingAssessmentDTO> assessments = nursingAssessmentService.getAssessmentsByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(assessments));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingAssessmentDTO>>> getAssessmentsByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -65,7 +61,6 @@ public class NursingAssessmentController {
     }
 
     @GetMapping("/type/{assessmentType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingAssessmentDTO>>> getAssessmentsByType(
             @PathVariable AssessmentType assessmentType,
             @RequestParam(defaultValue = "0") int page,
@@ -80,7 +75,6 @@ public class NursingAssessmentController {
     }
 
     @GetMapping("/patient/{patientId}/type/{assessmentType}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingAssessmentDTO>>> getAssessmentsByPatientIdAndType(
             @PathVariable UUID patientId,
             @PathVariable AssessmentType assessmentType,
@@ -96,7 +90,6 @@ public class NursingAssessmentController {
     }
 
     @GetMapping("/nurse/{nurseId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingAssessmentDTO>>> getAssessmentsByNurseId(
             @PathVariable UUID nurseId,
             @RequestParam(defaultValue = "0") int page,
@@ -111,7 +104,6 @@ public class NursingAssessmentController {
     }
 
     @GetMapping("/date/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<NursingAssessmentDTO>>> getAssessmentsByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
@@ -120,7 +112,6 @@ public class NursingAssessmentController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<NursingAssessmentDTO>>> searchAssessments(
             @RequestParam String searchTerm,
             @RequestParam(defaultValue = "0") int page,
@@ -135,7 +126,6 @@ public class NursingAssessmentController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<NursingAssessmentDTO>> updateAssessment(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateNursingAssessmentRequest request
@@ -145,7 +135,6 @@ public class NursingAssessmentController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteAssessment(@PathVariable UUID id) {
         nursingAssessmentService.deleteAssessment(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

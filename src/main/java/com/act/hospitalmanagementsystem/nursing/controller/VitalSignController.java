@@ -28,28 +28,24 @@ public class VitalSignController {
     private final VitalSignService vitalSignService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<VitalSignDTO>> createVitalSign(@Valid @RequestBody CreateVitalSignRequest request) {
         VitalSignDTO vitalSign = vitalSignService.createVitalSign(request);
         return ResponseEntity.ok(BaseResponseDTO.success(vitalSign));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<VitalSignDTO>> getVitalSignById(@PathVariable UUID id) {
         VitalSignDTO vitalSign = vitalSignService.getVitalSignById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(vitalSign));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<VitalSignDTO>>> getVitalSignsByPatientId(@PathVariable UUID patientId) {
         List<VitalSignDTO> vitalSigns = vitalSignService.getVitalSignsByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(vitalSigns));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<VitalSignDTO>>> getVitalSignsByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -64,7 +60,6 @@ public class VitalSignController {
     }
 
     @GetMapping("/recorded-by/{recordedBy}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<VitalSignDTO>>> getVitalSignsByRecordedBy(
             @PathVariable UUID recordedBy,
             @RequestParam(defaultValue = "0") int page,
@@ -79,7 +74,6 @@ public class VitalSignController {
     }
 
     @GetMapping("/patient/{patientId}/date/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<VitalSignDTO>>> getVitalSignsByPatientIdAndDate(
             @PathVariable UUID patientId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
@@ -89,7 +83,6 @@ public class VitalSignController {
     }
 
     @GetMapping("/abnormal")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<VitalSignDTO>>> getAbnormalVitalSigns(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -103,7 +96,6 @@ public class VitalSignController {
     }
 
     @GetMapping("/patient/{patientId}/abnormal")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<VitalSignDTO>>> getAbnormalVitalSignsByPatient(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -118,7 +110,6 @@ public class VitalSignController {
     }
 
     @GetMapping("/patient/{patientId}/latest")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<VitalSignDTO>>> getLatestVitalSigns(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -130,7 +121,6 @@ public class VitalSignController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<VitalSignDTO>> updateVitalSign(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateVitalSignRequest request
@@ -140,7 +130,6 @@ public class VitalSignController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteVitalSign(@PathVariable UUID id) {
         vitalSignService.deleteVitalSign(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));

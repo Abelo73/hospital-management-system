@@ -30,28 +30,24 @@ public class MedicationAdministrationController {
     private final MedicationAdministrationService medicationAdministrationService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<MedicationAdministrationDTO>> createMedicationAdministration(@Valid @RequestBody CreateMedicationAdministrationRequest request) {
         MedicationAdministrationDTO administration = medicationAdministrationService.createMedicationAdministration(request);
         return ResponseEntity.ok(BaseResponseDTO.success(administration));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<MedicationAdministrationDTO>> getMedicationAdministrationById(@PathVariable UUID id) {
         MedicationAdministrationDTO administration = medicationAdministrationService.getMedicationAdministrationById(id);
         return ResponseEntity.ok(BaseResponseDTO.success(administration));
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<MedicationAdministrationDTO>>> getMedicationAdministrationsByPatientId(@PathVariable UUID patientId) {
         List<MedicationAdministrationDTO> administrations = medicationAdministrationService.getMedicationAdministrationsByPatientId(patientId);
         return ResponseEntity.ok(BaseResponseDTO.success(administrations));
     }
 
     @GetMapping("/patient/{patientId}/paginated")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<MedicationAdministrationDTO>>> getMedicationAdministrationsByPatientIdPaginated(
             @PathVariable UUID patientId,
             @RequestParam(defaultValue = "0") int page,
@@ -66,7 +62,6 @@ public class MedicationAdministrationController {
     }
 
     @GetMapping("/administered-by/{administeredBy}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<MedicationAdministrationDTO>>> getMedicationAdministrationsByAdministeredBy(
             @PathVariable UUID administeredBy,
             @RequestParam(defaultValue = "0") int page,
@@ -81,7 +76,6 @@ public class MedicationAdministrationController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<MedicationAdministrationDTO>>> getMedicationAdministrationsByStatus(
             @PathVariable AdministrationStatus status,
             @RequestParam(defaultValue = "0") int page,
@@ -96,7 +90,6 @@ public class MedicationAdministrationController {
     }
 
     @GetMapping("/scheduled/{date}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<MedicationAdministrationDTO>>> getScheduledMedications(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
@@ -105,7 +98,6 @@ public class MedicationAdministrationController {
     }
 
     @GetMapping("/overdue/{date}/{time}")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<List<MedicationAdministrationDTO>>> getOverdueMedications(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time
@@ -115,7 +107,6 @@ public class MedicationAdministrationController {
     }
 
     @GetMapping("/patient/{patientId}/date-range")
-    @PreAuthorize("hasAuthority('NURSING_READ')")
     public ResponseEntity<BaseResponseDTO<Page<MedicationAdministrationDTO>>> getMedicationAdministrationsByDateRange(
             @PathVariable UUID patientId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -132,7 +123,6 @@ public class MedicationAdministrationController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_WRITE')")
     public ResponseEntity<BaseResponseDTO<MedicationAdministrationDTO>> updateMedicationAdministration(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateMedicationAdministrationRequest request
@@ -142,7 +132,6 @@ public class MedicationAdministrationController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('NURSING_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteMedicationAdministration(@PathVariable UUID id) {
         medicationAdministrationService.deleteMedicationAdministration(id);
         return ResponseEntity.ok(BaseResponseDTO.success(null));
