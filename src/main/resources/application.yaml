@@ -65,7 +65,7 @@ management:
 server:
   port: 8080
   servlet:
-    context-path: /api
+    context-path: /api/v1
 
 logging:
   level:
@@ -115,6 +115,9 @@ app:
   admin:
     email: admin@hospital.com
     default-password: Admin@123
+  cookie:
+    secure: ${COOKIE_SECURE:false}
+    same-site: ${COOKIE_SAME_SITE:lax}
 
 springdoc:
   swagger-ui:
