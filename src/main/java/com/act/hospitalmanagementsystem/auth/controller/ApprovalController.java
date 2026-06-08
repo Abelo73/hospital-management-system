@@ -4,6 +4,7 @@ import com.act.hospitalmanagementsystem.auth.dto.ApprovalActionRequest;
 import com.act.hospitalmanagementsystem.auth.dto.ApprovalRequestDTO;
 import com.act.hospitalmanagementsystem.auth.dto.SubmitApprovalRequest;
 import com.act.hospitalmanagementsystem.auth.dto.UserApprovalStatusDTO;
+import com.act.hospitalmanagementsystem.auth.entity.User;
 import com.act.hospitalmanagementsystem.auth.service.ApprovalService;
 import com.act.hospitalmanagementsystem.common.dto.BaseResponseDTO;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class ApprovalController {
 
     private final ApprovalService approvalService;
+    private final com.act.hospitalmanagementsystem.auth.repository.UserRepository userRepository;
 
     @GetMapping("/pending")
     @PreAuthorize("hasAuthority('APPROVAL_READ')")
@@ -96,8 +98,17 @@ public class ApprovalController {
 
     @GetMapping("/my-status")
     public ResponseEntity<BaseResponseDTO<UserApprovalStatusDTO>> getMyApprovalStatus(Authentication authentication) {
-        UUID userId = UUID.fromString(authentication.getName());
-        UserApprovalStatusDTO status = approvalService.getUserApprovalStatus(userId);
+        User user = userRepository.findByUsernameAndDeletedFalse(authentication.getName())
+                .orElseThrow(() -> new com.act.hospitalmanagementsystem.common.exception.ResourceNotFoundException("User", "username", authentication.getName()));
+        UserApprovalStatusDTO status = approvalService.getUserApprovalStatus(user.getId());
         return ResponseEntity.ok(BaseResponseDTO.success(status));
+    }
+
+    @GetMapping("/my-requests")
+    public ResponseEntity<BaseResponseDTO<List<ApprovalRequestDTO>>> getMyApprovalRequests(Authentication authentication) {
+        User user = userRepository.findByUsernameAndDeletedFalse(authentication.getName())
+                .orElseThrow(() -> new com.act.hospitalmanagementsystem.common.exception.ResourceNotFoundException("User", "username", authentication.getName()));
+        List<ApprovalRequestDTO> approvals = approvalService.getUserApprovalRequests(user.getId());
+        return ResponseEntity.ok(BaseResponseDTO.success(approvals));
     }
 }
