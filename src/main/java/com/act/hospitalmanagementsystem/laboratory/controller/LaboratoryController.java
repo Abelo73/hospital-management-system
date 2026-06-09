@@ -34,6 +34,11 @@ public class LaboratoryController {
         return ResponseEntity.ok(laboratoryService.getRequest(id));
     }
 
+    @GetMapping("/requests/pending")
+    public ResponseEntity<List<LabTestRequestDTO>> getPendingRequests() {
+        return ResponseEntity.ok(laboratoryService.getPendingRequests());
+    }
+
     @GetMapping("/requests/patient/{patientId}")
     public ResponseEntity<List<LabTestRequestDTO>> getPatientRequests(@PathVariable UUID patientId) {
         return ResponseEntity.ok(laboratoryService.getPatientRequests(patientId));

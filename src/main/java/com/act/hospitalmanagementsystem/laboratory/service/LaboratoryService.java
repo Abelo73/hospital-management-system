@@ -85,6 +85,11 @@ public class LaboratoryService {
         return laboratoryMapper.toDTO(request);
     }
 
+    public List<LabTestRequestDTO> getPendingRequests() {
+        List<LabTestRequest> requests = requestRepository.findByStatus(RequestStatus.PENDING);
+        return laboratoryMapper.toRequestDTOList(requests);
+    }
+
     public List<LabTestRequestDTO> getPatientRequests(UUID patientId) {
         List<LabTestRequest> requests = requestRepository.findByPatientId(patientId);
         return laboratoryMapper.toRequestDTOList(requests);
