@@ -14,8 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "diagnoses")
-public class Diagnosis extends BaseEntity {
+@Table(name = "consultation_diagnoses")
+public class ConsultationDiagnosis extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consultation_id", nullable = false)

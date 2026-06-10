@@ -4,7 +4,7 @@ import com.act.hospitalmanagementsystem.doctor.dto.ConsultationDTO;
 import com.act.hospitalmanagementsystem.doctor.dto.DiagnosisDTO;
 import com.act.hospitalmanagementsystem.doctor.dto.PrescriptionDTO;
 import com.act.hospitalmanagementsystem.doctor.entity.Consultation;
-import com.act.hospitalmanagementsystem.doctor.entity.Diagnosis;
+import com.act.hospitalmanagementsystem.doctor.entity.ConsultationDiagnosis;
 import com.act.hospitalmanagementsystem.doctor.entity.Prescription;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,8 +22,7 @@ public interface ConsultationMapper {
 
     List<ConsultationDTO> toDTOList(List<Consultation> consultations);
 
-    @Mapping(target = "consultationId", source = "consultation.id")
-    DiagnosisDTO toDTO(Diagnosis diagnosis);
+    DiagnosisDTO toDiagnosisDTO(ConsultationDiagnosis diagnosis);
 
     @Mapping(target = "consultationId", source = "consultation.id")
     PrescriptionDTO toDTO(Prescription prescription);

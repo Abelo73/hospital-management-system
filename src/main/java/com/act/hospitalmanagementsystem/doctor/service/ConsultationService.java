@@ -7,10 +7,12 @@ import com.act.hospitalmanagementsystem.doctor.dto.CreateConsultationRequest;
 import com.act.hospitalmanagementsystem.doctor.dto.DiagnosisDTO;
 import com.act.hospitalmanagementsystem.doctor.dto.PrescriptionDTO;
 import com.act.hospitalmanagementsystem.doctor.entity.Consultation;
-import com.act.hospitalmanagementsystem.doctor.entity.Diagnosis;
+import com.act.hospitalmanagementsystem.doctor.entity.ConsultationDiagnosis;
 import com.act.hospitalmanagementsystem.doctor.entity.Prescription;
 import com.act.hospitalmanagementsystem.doctor.mapper.ConsultationMapper;
+import com.act.hospitalmanagementsystem.doctor.repository.ConsultationDiagnosisRepository;
 import com.act.hospitalmanagementsystem.doctor.repository.ConsultationRepository;
+import com.act.hospitalmanagementsystem.doctor.repository.PrescriptionRepository;
 import com.act.hospitalmanagementsystem.patient.entity.Patient;
 import com.act.hospitalmanagementsystem.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 public class ConsultationService {
 
     private final ConsultationRepository consultationRepository;
+    private final ConsultationDiagnosisRepository diagnosisRepository;
+    private final PrescriptionRepository prescriptionRepository;
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
     private final ConsultationMapper consultationMapper;
@@ -50,15 +54,15 @@ public class ConsultationService {
         consultation.setNotes(request.getNotes());
 
         if (request.getDiagnoses() != null) {
-            for (DiagnosisDTO dReq : request.getDiagnoses()) {
-                Diagnosis diagnosis = new Diagnosis();
+            consultation.setDiagnoses(request.getDiagnoses().stream().map(dReq -> {
+                ConsultationDiagnosis diagnosis = new ConsultationDiagnosis();
                 diagnosis.setConsultation(consultation);
                 diagnosis.setIcd10Code(dReq.getIcd10Code());
                 diagnosis.setDescription(dReq.getDescription());
                 diagnosis.setIsPrimary(dReq.getIsPrimary());
                 diagnosis.setNotes(dReq.getNotes());
-                consultation.getDiagnoses().add(diagnosis);
-            }
+                return diagnosis;
+            }).collect(Collectors.toList()));
         }
 
         if (request.getPrescriptions() != null) {

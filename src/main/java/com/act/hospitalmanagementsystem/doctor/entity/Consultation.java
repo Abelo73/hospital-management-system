@@ -47,7 +47,7 @@ public class Consultation extends BaseEntity {
     private String plan;
 
     @OneToMany(mappedBy = "consultation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Diagnosis> diagnoses = new ArrayList<>();
+    private List<ConsultationDiagnosis> diagnoses = new ArrayList<>();
 
     @OneToMany(mappedBy = "consultation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prescription> prescriptions = new ArrayList<>();
