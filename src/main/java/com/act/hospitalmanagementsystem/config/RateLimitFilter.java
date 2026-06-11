@@ -50,7 +50,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
             // Request allowed
             long remainingTokens = probe.getRemainingTokens();
             response.addHeader("X-Rate-Limit-Remaining", String.valueOf(remainingTokens));
-            response.addHeader("X-Rate-Limit-Limit", String.valueOf(probe.getLimit().getCapacity()));
             filterChain.doFilter(request, response);
         } else {
             // Rate limit exceeded
