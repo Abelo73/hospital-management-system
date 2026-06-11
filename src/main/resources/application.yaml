@@ -80,6 +80,10 @@ logging:
     org.springframework.security: INFO
     org.hibernate.SQL: INFO
     com.hms: DEBUG
+  filter:
+    enabled: ${LOGGING_FILTER_ENABLED:true}
+    include-payload: ${LOGGING_FILTER_INCLUDE_PAYLOAD:true}
+    max-payload-length: ${LOGGING_FILTER_MAX_PAYLOAD_LENGTH:1000}
 
 jwt:
   secret: ${JWT_SECRET:veryLongSecretKeyForHospitalManagementSystem2026VerySecure}
@@ -125,6 +129,22 @@ app:
   cookie:
     secure: ${COOKIE_SECURE:false}
     same-site: ${COOKIE_SAME_SITE:lax}
+
+rate:
+  limit:
+    enabled: ${RATE_LIMIT_ENABLED:true}
+    default:
+      capacity: 100
+      refill-tokens: 100
+      refill-duration: 1m
+    strict:
+      capacity: 10
+      refill-tokens: 10
+      refill-duration: 1m
+    lenient:
+      capacity: 200
+      refill-tokens: 200
+      refill-duration: 1m
 
 springdoc:
   swagger-ui:
