@@ -123,7 +123,7 @@ public class DataInitializer implements CommandLineRunner {
         });
         doctorRole.setPermissions(getPermissionsForRole("DOCTOR"));
         roleRepository.save(doctorRole);
-        log.info("DOCTOR role synchronized with permissions ({} total).", doctorRole.getPermissions().size());
+
 
         // Always sync NURSE role with required permissions
         Role nurseRole = roleRepository.findByName("NURSE").orElseGet(() -> {
