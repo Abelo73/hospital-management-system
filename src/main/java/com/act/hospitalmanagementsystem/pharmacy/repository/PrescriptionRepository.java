@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+@Repository("pharmacyPrescriptionRepository")
 public interface PrescriptionRepository extends JpaRepository<Prescription, UUID> {
 
     Optional<Prescription> findByPrescriptionNumber(String prescriptionNumber);

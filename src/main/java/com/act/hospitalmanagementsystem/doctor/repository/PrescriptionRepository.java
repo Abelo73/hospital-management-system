@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
+@Repository("doctorPrescriptionRepository")
 public interface PrescriptionRepository extends JpaRepository<Prescription, UUID> {
     List<Prescription> findByConsultationId(UUID consultationId);
 }

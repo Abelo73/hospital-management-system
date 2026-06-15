@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController
+@RestController("inventoryReportController")
 @RequestMapping("/api/inventory/reports")
 @RequiredArgsConstructor
 public class ReportController {
