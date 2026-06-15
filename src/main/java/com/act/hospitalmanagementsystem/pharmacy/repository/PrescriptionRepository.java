@@ -23,9 +23,9 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, UUID
 
     Page<Prescription> findByStatus(PrescriptionStatus status, Pageable pageable);
 
-    @Query("SELECT p FROM Prescription p WHERE p.deleted = false AND p.status = :status ORDER BY p.prescriptionDate ASC")
+    @Query("SELECT p FROM PharmacyPrescription p WHERE p.deleted = false AND p.status = :status ORDER BY p.prescriptionDate ASC")
     Page<Prescription> findPendingPrescriptions(@Param("status") PrescriptionStatus status, Pageable pageable);
 
-    @Query("SELECT p FROM Prescription p WHERE p.deleted = false AND p.patientId = :patientId AND p.status = :status")
+    @Query("SELECT p FROM PharmacyPrescription p WHERE p.deleted = false AND p.patientId = :patientId AND p.status = :status")
     Page<Prescription> findByPatientIdAndStatus(@Param("patientId") UUID patientId, @Param("status") PrescriptionStatus status, Pageable pageable);
 }

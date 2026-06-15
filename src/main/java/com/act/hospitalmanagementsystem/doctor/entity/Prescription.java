@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Entity
+@Entity(name = "DoctorPrescription")
 @Table(name = "prescriptions")
 public class Prescription extends BaseEntity {
 
