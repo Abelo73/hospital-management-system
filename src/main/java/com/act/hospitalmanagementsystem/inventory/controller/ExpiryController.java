@@ -1,6 +1,7 @@
 package com.act.hospitalmanagementsystem.inventory.controller;
 
 import com.act.hospitalmanagementsystem.common.dto.BaseResponseDTO;
+import com.act.hospitalmanagementsystem.inventory.dto.ExpiryAlertDTO;
 import com.act.hospitalmanagementsystem.inventory.service.ExpiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,10 @@ public class ExpiryController {
 
     @GetMapping("/alerts")
     @PreAuthorize("hasAuthority('INVENTORY_READ')")
-    public ResponseEntity<BaseResponseDTO<List<Object>>> getExpiryAlerts(
+    public ResponseEntity<BaseResponseDTO<List<ExpiryAlertDTO>>> getExpiryAlerts(
             @RequestParam Integer days,
             @RequestParam(required = false) String location) {
-        BaseResponseDTO<List<Object>> response = expiryService.getExpiryAlerts(days, location);
+        BaseResponseDTO<List<ExpiryAlertDTO>> response = expiryService.getExpiryAlerts(days, location);
         return ResponseEntity.ok(response);
     }
 

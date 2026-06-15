@@ -24,19 +24,19 @@ public class TrackingService {
     @Transactional
     public void logNotificationDelivery(UUID notificationId, String channel, String status, String provider, String providerMessageId) {
         try {
-            NotificationLog log = new NotificationLog();
-            log.setNotification(notificationRepository.findById(notificationId).orElse(null));
-            log.setChannel(com.act.hospitalmanagementsystem.notification.enums.NotificationChannel.valueOf(channel));
-            log.setStatus(status);
-            log.setSentAt(LocalDateTime.now());
+            NotificationLog notifLog = new NotificationLog();
+            notifLog.setNotification(notificationRepository.findById(notificationId).orElse(null));
+            notifLog.setChannel(com.act.hospitalmanagementsystem.notification.enums.NotificationChannel.valueOf(channel));
+            notifLog.setStatus(status);
+            notifLog.setSentAt(LocalDateTime.now());
             if ("DELIVERED".equals(status)) {
-                log.setDeliveredAt(LocalDateTime.now());
+                notifLog.setDeliveredAt(LocalDateTime.now());
             }
-            log.setProvider(provider);
-            log.setProviderMessageId(providerMessageId);
+            notifLog.setProvider(provider);
+            notifLog.setProviderMessageId(providerMessageId);
             
             // TODO: Save notification log when repository is implemented
-            // notificationLogRepository.save(log);
+            // notificationLogRepository.save(notifLog);
             
             log.info("Notification delivery logged: {} - {}", notificationId, status);
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class TrackingService {
             // TODO: Generate delivery report based on parameters
             log.info("Generating delivery report: {} to {}, type: {}, channel: {}", startDate, endDate, notificationType, channel);
             
-            return BaseResponseDTO.success(Map.of("message", "Report generation not yet implemented"), "Report generation placeholder");
+            return BaseResponseDTO.success("Report generation placeholder", Map.of("message", "Report generation not yet implemented"));
         } catch (Exception e) {
             log.error("Error generating delivery report", e);
             return BaseResponseDTO.error("Failed to generate report: " + e.getMessage());
@@ -79,7 +79,7 @@ public class TrackingService {
             // TODO: Generate analytics report with specified metrics (delivery_rate, open_rate, click_rate)
             log.info("Generating analytics report: {} to {}, metrics: {}", startDate, endDate, metrics);
             
-            return BaseResponseDTO.success(Map.of("message", "Analytics report generation not yet implemented"), "Analytics report placeholder");
+            return BaseResponseDTO.success("Analytics report placeholder", Map.of("message", "Analytics report generation not yet implemented"));
         } catch (Exception e) {
             log.error("Error generating analytics report", e);
             return BaseResponseDTO.error("Failed to generate analytics report: " + e.getMessage());

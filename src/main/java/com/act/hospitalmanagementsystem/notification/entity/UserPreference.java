@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor

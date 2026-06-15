@@ -74,7 +74,7 @@ public class NotificationController {
     @PreAuthorize("hasAuthority('NOTIFICATION_WRITE')")
     public ResponseEntity<BaseResponseDTO<Void>> markAllAsRead(Authentication authentication) {
         // TODO: Implement mark all as read functionality
-        return ResponseEntity.ok(BaseResponseDTO.success(null, "Mark all as read not yet implemented"));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Mark all as read not yet implemented", null));
     }
 
     @DeleteMapping("/{id}")

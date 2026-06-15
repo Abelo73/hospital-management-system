@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -52,7 +53,7 @@ public class ExpiryService {
         try {
             LocalDate date = LocalDate.now().plusDays(days);
             // TODO: Implement retrieval of expiry alerts from repository
-            return BaseResponseDTO.success(List.of(), "Expiry alerts retrieved");
+            return BaseResponseDTO.success("Expiry alerts retrieved", List.of());
         } catch (Exception e) {
             log.error("Error getting expiry alerts", e);
             return BaseResponseDTO.error("Failed to get expiry alerts: " + e.getMessage());
@@ -63,7 +64,7 @@ public class ExpiryService {
     public BaseResponseDTO<Void> acknowledgeAlert(UUID alertId, String actionTaken, String acknowledgedBy) {
         try {
             // TODO: Implement alert acknowledgment
-            return BaseResponseDTO.success(null, "Alert acknowledged successfully");
+            return BaseResponseDTO.<Void>success("Alert acknowledged successfully", null);
         } catch (Exception e) {
             log.error("Error acknowledging alert", e);
             return BaseResponseDTO.error("Failed to acknowledge alert: " + e.getMessage());
@@ -74,7 +75,7 @@ public class ExpiryService {
     public BaseResponseDTO<Void> disposeExpiredItems(List<Map<String, Object>> items, UUID disposedBy) {
         try {
             // TODO: Implement disposal of expired items
-            return BaseResponseDTO.success(null, "Expired items disposed successfully");
+            return BaseResponseDTO.<Void>success("Expired items disposed successfully", null);
         } catch (Exception e) {
             log.error("Error disposing expired items", e);
             return BaseResponseDTO.error("Failed to dispose expired items: " + e.getMessage());

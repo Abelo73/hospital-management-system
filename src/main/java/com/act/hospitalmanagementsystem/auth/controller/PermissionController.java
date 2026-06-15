@@ -60,6 +60,6 @@ public class PermissionController {
     @PreAuthorize("hasAuthority('PERMISSION_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deletePermission(@PathVariable UUID id) {
         permissionService.deletePermission(id);
-        return ResponseEntity.ok(BaseResponseDTO.success("Permission deleted successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Permission deleted successfully", null));
     }
 }

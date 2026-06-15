@@ -47,7 +47,7 @@ public class DispensingService {
             // TODO: Create dispensing items
 
             Dispensing saved = dispensingRepository.save(dispensing);
-            return BaseResponseDTO.success(dispensingMapper.toDTO(saved), "Dispensing created successfully");
+            return BaseResponseDTO.success("Dispensing created successfully", dispensingMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating dispensing", e);
             return BaseResponseDTO.error("Failed to create dispensing: " + e.getMessage());
@@ -59,7 +59,7 @@ public class DispensingService {
         try {
             Dispensing dispensing = dispensingRepository.findByDispensingNumber(dispensingNumber)
                     .orElseThrow(() -> new RuntimeException("Dispensing not found"));
-            return BaseResponseDTO.success(dispensingMapper.toDTO(dispensing), "Dispensing retrieved");
+            return BaseResponseDTO.success("Dispensing retrieved", dispensingMapper.toDTO(dispensing));
         } catch (Exception e) {
             log.error("Error getting dispensing", e);
             return BaseResponseDTO.error("Failed to get dispensing: " + e.getMessage());
@@ -85,7 +85,7 @@ public class DispensingService {
             }
 
             Dispensing saved = dispensingRepository.save(dispensing);
-            return BaseResponseDTO.success(dispensingMapper.toDTO(saved), "Dispensing completed");
+            return BaseResponseDTO.success("Dispensing completed", dispensingMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error completing dispensing", e);
             return BaseResponseDTO.error("Failed to complete dispensing: " + e.getMessage());

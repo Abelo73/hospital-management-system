@@ -27,7 +27,7 @@ public class PreferenceService {
     public BaseResponseDTO<List<PreferenceDTO>> getUserPreferences(UUID userId) {
         try {
             List<UserPreference> preferences = preferenceRepository.findByUserId(userId);
-            return BaseResponseDTO.success(preferenceMapper.toDTOList(preferences), "Preferences retrieved");
+            return BaseResponseDTO.success("Preferences retrieved", preferenceMapper.toDTOList(preferences));
         } catch (Exception e) {
             log.error("Error getting user preferences", e);
             return BaseResponseDTO.error("Failed to get preferences: " + e.getMessage());
@@ -57,7 +57,7 @@ public class PreferenceService {
             }
 
             UserPreference saved = preferenceRepository.save(preference);
-            return BaseResponseDTO.success(preferenceMapper.toDTO(saved), "Preference updated successfully");
+            return BaseResponseDTO.success("Preference updated successfully", preferenceMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error updating preference", e);
             return BaseResponseDTO.error("Failed to update preference: " + e.getMessage());
@@ -79,7 +79,7 @@ public class PreferenceService {
                 dto.setFrequency("IMMEDIATE");
                 defaultPreferences.add(dto);
             }
-            return BaseResponseDTO.success(defaultPreferences, "Default preferences retrieved");
+            return BaseResponseDTO.success("Default preferences retrieved", defaultPreferences);
         } catch (Exception e) {
             log.error("Error getting default preferences", e);
             return BaseResponseDTO.error("Failed to get default preferences: " + e.getMessage());

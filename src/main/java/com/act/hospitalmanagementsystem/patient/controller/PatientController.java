@@ -87,6 +87,6 @@ public class PatientController {
     @PreAuthorize("hasAuthority('PATIENT_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deletePatient(@PathVariable UUID id) {
         patientService.deletePatient(id);
-        return ResponseEntity.ok(BaseResponseDTO.success("Patient deleted successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Patient deleted successfully", null));
     }
 }

@@ -37,7 +37,7 @@ public class StockService {
             } else {
                 stocks = stockRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(stockMapper.toDTOList(stocks.getContent()), "Stock status retrieved");
+            return BaseResponseDTO.success("Stock status retrieved", stockMapper.toDTOList(stocks.getContent()));
         } catch (Exception e) {
             log.error("Error getting stock status", e);
             return BaseResponseDTO.error("Failed to get stock status: " + e.getMessage());
@@ -48,7 +48,7 @@ public class StockService {
     public BaseResponseDTO<List<StockDTO>> getStockByItem(UUID itemId) {
         try {
             Page<Stock> stocks = stockRepository.findByItemId(itemId, Pageable.unpaged());
-            return BaseResponseDTO.success(stockMapper.toDTOList(stocks.getContent()), "Stock retrieved");
+            return BaseResponseDTO.success("Stock retrieved", stockMapper.toDTOList(stocks.getContent()));
         } catch (Exception e) {
             log.error("Error getting stock by item", e);
             return BaseResponseDTO.error("Failed to get stock: " + e.getMessage());
@@ -59,7 +59,7 @@ public class StockService {
     public BaseResponseDTO<List<StockDTO>> getLowStockItems(String location) {
         try {
             Page<Stock> stocks = stockRepository.findAllLowStock(Pageable.unpaged());
-            return BaseResponseDTO.success(stockMapper.toDTOList(stocks.getContent()), "Low stock items retrieved");
+            return BaseResponseDTO.success("Low stock items retrieved", stockMapper.toDTOList(stocks.getContent()));
         } catch (Exception e) {
             log.error("Error getting low stock items", e);
             return BaseResponseDTO.error("Failed to get low stock items: " + e.getMessage());
@@ -71,7 +71,7 @@ public class StockService {
         try {
             LocalDate date = LocalDate.now().plusDays(days);
             Page<Stock> stocks = stockRepository.findExpiringStock(date, Pageable.unpaged());
-            return BaseResponseDTO.success(stockMapper.toDTOList(stocks.getContent()), "Expiring items retrieved");
+            return BaseResponseDTO.success("Expiring items retrieved", stockMapper.toDTOList(stocks.getContent()));
         } catch (Exception e) {
             log.error("Error getting expiring items", e);
             return BaseResponseDTO.error("Failed to get expiring items: " + e.getMessage());
@@ -101,7 +101,7 @@ public class StockService {
 
             // TODO: Log the adjustment for audit trail
 
-            return BaseResponseDTO.success(null, "Stock adjusted successfully");
+            return BaseResponseDTO.<Void>success("Stock adjusted successfully", null);
         } catch (Exception e) {
             log.error("Error adjusting stock", e);
             return BaseResponseDTO.error("Failed to adjust stock: " + e.getMessage());
@@ -144,7 +144,7 @@ public class StockService {
 
             // TODO: Log the transfer for audit trail
 
-            return BaseResponseDTO.success(null, "Stock transferred successfully");
+            return BaseResponseDTO.<Void>success("Stock transferred successfully", null);
         } catch (Exception e) {
             log.error("Error transferring stock", e);
             return BaseResponseDTO.error("Failed to transfer stock: " + e.getMessage());

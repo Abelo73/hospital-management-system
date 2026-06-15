@@ -25,7 +25,7 @@ public class PatientMedicationService {
     public BaseResponseDTO<List<PatientMedicationDTO>> getMedicationHistory(UUID patientId) {
         try {
             List<PatientMedication> medications = patientMedicationRepository.findByPatientId(patientId);
-            return BaseResponseDTO.success(patientMedicationMapper.toDTOList(medications), "Medication history retrieved");
+            return BaseResponseDTO.success("Medication history retrieved", patientMedicationMapper.toDTOList(medications));
         } catch (Exception e) {
             log.error("Error getting medication history", e);
             return BaseResponseDTO.error("Failed to get medication history: " + e.getMessage());
@@ -36,7 +36,7 @@ public class PatientMedicationService {
     public BaseResponseDTO<List<PatientMedicationDTO>> getCurrentMedications(UUID patientId) {
         try {
             List<PatientMedication> medications = patientMedicationRepository.findByPatientIdAndIsActiveTrue(patientId);
-            return BaseResponseDTO.success(patientMedicationMapper.toDTOList(medications), "Current medications retrieved");
+            return BaseResponseDTO.success("Current medications retrieved", patientMedicationMapper.toDTOList(medications));
         } catch (Exception e) {
             log.error("Error getting current medications", e);
             return BaseResponseDTO.error("Failed to get current medications: " + e.getMessage());
@@ -47,7 +47,7 @@ public class PatientMedicationService {
     public BaseResponseDTO<Void> addDrugAllergy(UUID patientId, UUID drugId, String allergen, String severity, String reaction, String reportedBy) {
         try {
             // TODO: Implement drug allergy recording
-            return BaseResponseDTO.success(null, "Drug allergy recorded");
+            return BaseResponseDTO.<Void>success("Drug allergy recorded", null);
         } catch (Exception e) {
             log.error("Error adding drug allergy", e);
             return BaseResponseDTO.error("Failed to add drug allergy: " + e.getMessage());
@@ -58,7 +58,7 @@ public class PatientMedicationService {
     public BaseResponseDTO<Void> recordAdverseReaction(UUID patientId, UUID drugId, String reaction, String severity, String onsetDate, String notes) {
         try {
             // TODO: Implement adverse reaction recording
-            return BaseResponseDTO.success(null, "Adverse reaction recorded");
+            return BaseResponseDTO.<Void>success("Adverse reaction recorded", null);
         } catch (Exception e) {
             log.error("Error recording adverse reaction", e);
             return BaseResponseDTO.error("Failed to record adverse reaction: " + e.getMessage());

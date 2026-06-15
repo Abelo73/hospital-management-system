@@ -37,7 +37,7 @@ public class PrescriptionService {
             } else {
                 prescriptions = prescriptionRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(prescriptionMapper.toDTOList(prescriptions.getContent()), "Prescriptions retrieved");
+            return BaseResponseDTO.success("Prescriptions retrieved", prescriptionMapper.toDTOList(prescriptions.getContent()));
         } catch (Exception e) {
             log.error("Error getting prescriptions", e);
             return BaseResponseDTO.error("Failed to get prescriptions: " + e.getMessage());
@@ -49,7 +49,7 @@ public class PrescriptionService {
         try {
             Prescription prescription = prescriptionRepository.findByPrescriptionNumber(prescriptionNumber)
                     .orElseThrow(() -> new RuntimeException("Prescription not found"));
-            return BaseResponseDTO.success(prescriptionMapper.toDTO(prescription), "Prescription retrieved");
+            return BaseResponseDTO.success("Prescription retrieved", prescriptionMapper.toDTO(prescription));
         } catch (Exception e) {
             log.error("Error getting prescription", e);
             return BaseResponseDTO.error("Failed to get prescription: " + e.getMessage());
@@ -73,7 +73,7 @@ public class PrescriptionService {
             prescription.setUpdatedBy(validatedBy);
 
             Prescription saved = prescriptionRepository.save(prescription);
-            return BaseResponseDTO.success(prescriptionMapper.toDTO(saved), "Prescription validated");
+            return BaseResponseDTO.success("Prescription validated", prescriptionMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error validating prescription", e);
             return BaseResponseDTO.error("Failed to validate prescription: " + e.getMessage());
@@ -92,7 +92,7 @@ public class PrescriptionService {
             // TODO: Process prescription items and update stock
 
             Prescription saved = prescriptionRepository.save(prescription);
-            return BaseResponseDTO.success(prescriptionMapper.toDTO(saved), "Prescription processed");
+            return BaseResponseDTO.success("Prescription processed", prescriptionMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error processing prescription", e);
             return BaseResponseDTO.error("Failed to process prescription: " + e.getMessage());
@@ -110,7 +110,7 @@ public class PrescriptionService {
             prescription.setUpdatedBy(updatedBy);
 
             prescriptionRepository.save(prescription);
-            return BaseResponseDTO.success(null, "Prescription cancelled");
+            return BaseResponseDTO.<Void>success("Prescription cancelled", null);
         } catch (Exception e) {
             log.error("Error cancelling prescription", e);
             return BaseResponseDTO.error("Failed to cancel prescription: " + e.getMessage());

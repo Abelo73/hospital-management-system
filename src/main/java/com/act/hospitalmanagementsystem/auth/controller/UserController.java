@@ -67,28 +67,28 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok(BaseResponseDTO.success("User deleted successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("User deleted successfully", null));
     }
 
     @PostMapping("/reset-password")
     @PreAuthorize("hasAuthority('USER_WRITE')")
     public ResponseEntity<BaseResponseDTO<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         userService.resetPassword(request);
-        return ResponseEntity.ok(BaseResponseDTO.success("Password reset successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Password reset successfully", null));
     }
 
     @PostMapping("/{id}/roles/{roleName}")
     @PreAuthorize("hasAuthority('USER_WRITE')")
     public ResponseEntity<BaseResponseDTO<Void>> assignRole(@PathVariable UUID id, @PathVariable String roleName) {
         userService.assignRole(id, roleName);
-        return ResponseEntity.ok(BaseResponseDTO.success("Role assigned successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Role assigned successfully", null));
     }
 
     @DeleteMapping("/{id}/roles/{roleName}")
     @PreAuthorize("hasAuthority('USER_WRITE')")
     public ResponseEntity<BaseResponseDTO<Void>> removeRole(@PathVariable UUID id, @PathVariable String roleName) {
         userService.removeRole(id, roleName);
-        return ResponseEntity.ok(BaseResponseDTO.success("Role removed successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Role removed successfully", null));
     }
 
     @GetMapping("/role/{roleName}")

@@ -40,7 +40,7 @@ public class TrainingService {
             training.setCreatedBy(createdBy);
 
             Training saved = trainingRepository.save(training);
-            return BaseResponseDTO.success(trainingMapper.toDTO(saved), "Training created successfully");
+            return BaseResponseDTO.success("Training created successfully", trainingMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating training", e);
             return BaseResponseDTO.error("Failed to create training: " + e.getMessage());
@@ -59,7 +59,7 @@ public class TrainingService {
             } else {
                 trainings = trainingRepository.findAll();
             }
-            return BaseResponseDTO.success(trainingMapper.toDTOList(trainings), "Trainings retrieved");
+            return BaseResponseDTO.success("Trainings retrieved", trainingMapper.toDTOList(trainings));
         } catch (Exception e) {
             log.error("Error getting trainings", e);
             return BaseResponseDTO.error("Failed to get trainings: " + e.getMessage());
@@ -70,7 +70,7 @@ public class TrainingService {
     public BaseResponseDTO<Void> enrollEmployee(UUID trainingId, UUID employeeId, String createdBy) {
         try {
             // TODO: Implement training enrollment
-            return BaseResponseDTO.success(null, "Employee enrolled successfully");
+            return BaseResponseDTO.<Void>success("Employee enrolled successfully", null);
         } catch (Exception e) {
             log.error("Error enrolling employee", e);
             return BaseResponseDTO.error("Failed to enroll employee: " + e.getMessage());

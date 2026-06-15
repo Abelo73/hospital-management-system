@@ -35,7 +35,7 @@ public class ScheduleService {
             } else {
                 schedules = scheduleRepository.findAll();
             }
-            return BaseResponseDTO.success(toDTOList(schedules), "Schedules retrieved");
+            return BaseResponseDTO.success("Schedules retrieved", toDTOList(schedules));
         } catch (Exception e) {
             log.error("Error getting schedules", e);
             return BaseResponseDTO.error("Failed to get schedules: " + e.getMessage());
@@ -68,7 +68,7 @@ public class ScheduleService {
             schedule.setNextRunAt(calculateNextRunTime(cronExpression, timezone));
             
             NotificationSchedule saved = scheduleRepository.save(schedule);
-            return BaseResponseDTO.success(toDTO(saved), "Schedule created successfully");
+            return BaseResponseDTO.success("Schedule created successfully", toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating schedule", e);
             return BaseResponseDTO.error("Failed to create schedule: " + e.getMessage());
@@ -85,7 +85,7 @@ public class ScheduleService {
             schedule.setUpdatedBy(updatedBy);
             
             NotificationSchedule saved = scheduleRepository.save(schedule);
-            return BaseResponseDTO.success(toDTO(saved), "Schedule updated successfully");
+            return BaseResponseDTO.success("Schedule updated successfully", toDTO(saved));
         } catch (Exception e) {
             log.error("Error updating schedule", e);
             return BaseResponseDTO.error("Failed to update schedule: " + e.getMessage());
@@ -99,7 +99,7 @@ public class ScheduleService {
                     .orElseThrow(() -> new RuntimeException("Schedule not found"));
             
             executeSchedule(schedule);
-            return BaseResponseDTO.success(null, "Schedule triggered successfully");
+            return BaseResponseDTO.<Void>success("Schedule triggered successfully", null);
         } catch (Exception e) {
             log.error("Error triggering schedule", e);
             return BaseResponseDTO.error("Failed to trigger schedule: " + e.getMessage());

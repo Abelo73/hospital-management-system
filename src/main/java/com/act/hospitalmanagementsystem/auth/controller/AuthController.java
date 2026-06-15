@@ -53,7 +53,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<BaseResponseDTO<Void>> logout(HttpServletResponse response) {
         clearAuthCookies(response);
-        return ResponseEntity.ok(BaseResponseDTO.success("Logged out successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Logged out successfully", null));
     }
 
     private void setAuthCookies(HttpServletResponse response, LoginResponse loginResponse) {

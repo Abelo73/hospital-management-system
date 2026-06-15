@@ -42,7 +42,7 @@ public class PayrollService {
             payroll.setCreatedBy(createdBy);
 
             Payroll saved = payrollRepository.save(payroll);
-            return BaseResponseDTO.success(payrollMapper.toDTO(saved), "Payroll processed successfully");
+            return BaseResponseDTO.success("Payroll processed successfully", payrollMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error processing payroll", e);
             return BaseResponseDTO.error("Failed to process payroll: " + e.getMessage());
@@ -61,7 +61,7 @@ public class PayrollService {
             } else {
                 payrolls = payrollRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(payrollMapper.toDTOList(payrolls.getContent()), "Payroll records retrieved");
+            return BaseResponseDTO.success("Payroll records retrieved", payrollMapper.toDTOList(payrolls.getContent()));
         } catch (Exception e) {
             log.error("Error getting payroll records", e);
             return BaseResponseDTO.error("Failed to get payroll records: " + e.getMessage());
@@ -81,7 +81,7 @@ public class PayrollService {
             payroll.setUpdatedBy(updatedBy);
 
             Payroll saved = payrollRepository.save(payroll);
-            return BaseResponseDTO.success(payrollMapper.toDTO(saved), "Payroll marked as paid");
+            return BaseResponseDTO.success("Payroll marked as paid", payrollMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error marking payroll as paid", e);
             return BaseResponseDTO.error("Failed to mark payroll as paid: " + e.getMessage());

@@ -42,7 +42,7 @@ public class LeaveRequestService {
             leaveRequest.setCreatedBy(createdBy);
 
             LeaveRequest saved = leaveRequestRepository.save(leaveRequest);
-            return BaseResponseDTO.success(leaveRequestMapper.toDTO(saved), "Leave request created successfully");
+            return BaseResponseDTO.success("Leave request created successfully", leaveRequestMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating leave request", e);
             return BaseResponseDTO.error("Failed to create leave request: " + e.getMessage());
@@ -69,7 +69,7 @@ public class LeaveRequestService {
             } else {
                 leaveRequests = leaveRequestRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(leaveRequestMapper.toDTOList(leaveRequests.getContent()), "Leave requests retrieved");
+            return BaseResponseDTO.success("Leave requests retrieved", leaveRequestMapper.toDTOList(leaveRequests.getContent()));
         } catch (Exception e) {
             log.error("Error getting leave requests", e);
             return BaseResponseDTO.error("Failed to get leave requests: " + e.getMessage());
@@ -93,7 +93,8 @@ public class LeaveRequestService {
             leaveRequest.setUpdatedBy(approvedBy);
 
             LeaveRequest saved = leaveRequestRepository.save(leaveRequest);
-            return BaseResponseDTO.success(leaveRequestMapper.toDTO(saved), approved ? "Leave request approved" : "Leave request rejected");
+            String msg = approved ? "Leave request approved" : "Leave request rejected";
+            return BaseResponseDTO.success(msg, leaveRequestMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error approving leave request", e);
             return BaseResponseDTO.error("Failed to approve leave request: " + e.getMessage());

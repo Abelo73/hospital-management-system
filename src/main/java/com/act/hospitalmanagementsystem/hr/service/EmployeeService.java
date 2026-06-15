@@ -40,7 +40,7 @@ public class EmployeeService {
             } else {
                 employees = employeeRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(employeeMapper.toDTOList(employees.getContent()), "Employees retrieved");
+            return BaseResponseDTO.success("Employees retrieved", employeeMapper.toDTOList(employees.getContent()));
         } catch (Exception e) {
             log.error("Error getting employees", e);
             return BaseResponseDTO.error("Failed to get employees: " + e.getMessage());
@@ -52,7 +52,7 @@ public class EmployeeService {
         try {
             Employee employee = employeeRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Employee not found"));
-            return BaseResponseDTO.success(employeeMapper.toDTO(employee), "Employee retrieved");
+            return BaseResponseDTO.success("Employee retrieved", employeeMapper.toDTO(employee));
         } catch (Exception e) {
             log.error("Error getting employee", e);
             return BaseResponseDTO.error("Failed to get employee: " + e.getMessage());
@@ -72,7 +72,7 @@ public class EmployeeService {
             employee.setCreatedBy(createdBy);
             Employee saved = employeeRepository.save(employee);
 
-            return BaseResponseDTO.success(employeeMapper.toDTO(saved), "Employee created successfully");
+            return BaseResponseDTO.success("Employee created successfully", employeeMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating employee", e);
             return BaseResponseDTO.error("Failed to create employee: " + e.getMessage());
@@ -114,7 +114,7 @@ public class EmployeeService {
             existing.setUpdatedBy(updatedBy);
 
             Employee saved = employeeRepository.save(existing);
-            return BaseResponseDTO.success(employeeMapper.toDTO(saved), "Employee updated successfully");
+            return BaseResponseDTO.success("Employee updated successfully", employeeMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error updating employee", e);
             return BaseResponseDTO.error("Failed to update employee: " + e.getMessage());
@@ -133,7 +133,7 @@ public class EmployeeService {
             employee.setUpdatedBy(updatedBy);
 
             employeeRepository.save(employee);
-            return BaseResponseDTO.success(null, "Employee terminated successfully");
+            return BaseResponseDTO.<Void>success("Employee terminated successfully", null);
         } catch (Exception e) {
             log.error("Error terminating employee", e);
             return BaseResponseDTO.error("Failed to terminate employee: " + e.getMessage());

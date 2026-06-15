@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -43,7 +44,7 @@ public class RecruitmentService {
             recruitment.setCreatedBy(createdBy);
 
             Recruitment saved = recruitmentRepository.save(recruitment);
-            return BaseResponseDTO.success(recruitmentMapper.toDTO(saved), "Job posting created successfully");
+            return BaseResponseDTO.success("Job posting created successfully", recruitmentMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating job posting", e);
             return BaseResponseDTO.error("Failed to create job posting: " + e.getMessage());
@@ -61,7 +62,7 @@ public class RecruitmentService {
             } else {
                 recruitments = recruitmentRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(recruitmentMapper.toDTOList(recruitments.getContent()), "Job postings retrieved");
+            return BaseResponseDTO.success("Job postings retrieved", recruitmentMapper.toDTOList(recruitments.getContent()));
         } catch (Exception e) {
             log.error("Error getting job postings", e);
             return BaseResponseDTO.error("Failed to get job postings: " + e.getMessage());
@@ -78,7 +79,7 @@ public class RecruitmentService {
             recruitment.setUpdatedBy(updatedBy);
 
             Recruitment saved = recruitmentRepository.save(recruitment);
-            return BaseResponseDTO.success(recruitmentMapper.toDTO(saved), "Job posting updated successfully");
+            return BaseResponseDTO.success("Job posting updated successfully", recruitmentMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error updating job posting", e);
             return BaseResponseDTO.error("Failed to update job posting: " + e.getMessage());

@@ -43,7 +43,6 @@ public class ProcurementService {
             order.setOrderDate(LocalDate.now());
             order.setExpectedDeliveryDate(expectedDeliveryDate);
             order.setStatus(ProcurementStatus.DRAFT);
-            order.setItems(items.toString());
             order.setPaymentMethod(paymentMethod);
             order.setDeliveryMethod(deliveryMethod);
             order.setCreatedBy(createdBy);
@@ -52,7 +51,7 @@ public class ProcurementService {
             // TODO: Implement total calculation based on items
 
             PurchaseOrder saved = procurementRepository.savePurchaseOrder(order);
-            return BaseResponseDTO.success(procurementMapper.toDTO(saved), "Purchase order created successfully");
+            return BaseResponseDTO.success("Purchase order created successfully", procurementMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating purchase order", e);
             return BaseResponseDTO.error("Failed to create purchase order: " + e.getMessage());
@@ -76,7 +75,7 @@ public class ProcurementService {
             order.setStatus(ProcurementStatus.RECEIVED);
             procurementRepository.savePurchaseOrder(order);
 
-            return BaseResponseDTO.success(null, "Goods received successfully");
+            return BaseResponseDTO.<Void>success("Goods received successfully", null);
         } catch (Exception e) {
             log.error("Error receiving goods", e);
             return BaseResponseDTO.error("Failed to receive goods: " + e.getMessage());
@@ -92,7 +91,7 @@ public class ProcurementService {
             } else {
                 orders = procurementRepository.findAllPurchaseOrders(pageable);
             }
-            return BaseResponseDTO.success(procurementMapper.toDTOList(orders.getContent()), "Purchase orders retrieved");
+            return BaseResponseDTO.success("Purchase orders retrieved", procurementMapper.toDTOList(orders.getContent()));
         } catch (Exception e) {
             log.error("Error getting purchase orders", e);
             return BaseResponseDTO.error("Failed to get purchase orders: " + e.getMessage());

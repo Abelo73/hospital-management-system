@@ -35,7 +35,7 @@ public class AttendanceService {
             attendance.setCreatedBy(createdBy);
 
             Attendance saved = attendanceRepository.save(attendance);
-            return BaseResponseDTO.success(attendanceMapper.toDTO(saved), "Check-in successful");
+            return BaseResponseDTO.success("Check-in successful", attendanceMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error checking in", e);
             return BaseResponseDTO.error("Failed to check in: " + e.getMessage());
@@ -58,7 +58,7 @@ public class AttendanceService {
             }
 
             Attendance saved = attendanceRepository.save(attendance);
-            return BaseResponseDTO.success(attendanceMapper.toDTO(saved), "Check-out successful");
+            return BaseResponseDTO.success("Check-out successful", attendanceMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error checking out", e);
             return BaseResponseDTO.error("Failed to check out: " + e.getMessage());
@@ -75,7 +75,7 @@ public class AttendanceService {
             } else {
                 attendances = attendanceRepository.findByEmployeeId(employeeId);
             }
-            return BaseResponseDTO.success(attendanceMapper.toDTOList(attendances), "Attendance retrieved");
+            return BaseResponseDTO.success("Attendance retrieved", attendanceMapper.toDTOList(attendances));
         } catch (Exception e) {
             log.error("Error getting attendance", e);
             return BaseResponseDTO.error("Failed to get attendance: " + e.getMessage());

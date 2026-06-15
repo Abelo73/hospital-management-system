@@ -33,7 +33,7 @@ public class DrugService {
     public BaseResponseDTO<List<DrugDTO>> searchDrugs(String query, Pageable pageable) {
         try {
             Page<Drug> drugs = drugRepository.searchDrugs(query, pageable);
-            return BaseResponseDTO.success(drugMapper.toDTOList(drugs.getContent()), "Drugs retrieved");
+            return BaseResponseDTO.success("Drugs retrieved", drugMapper.toDTOList(drugs.getContent()));
         } catch (Exception e) {
             log.error("Error searching drugs", e);
             return BaseResponseDTO.error("Failed to search drugs: " + e.getMessage());
@@ -45,7 +45,7 @@ public class DrugService {
         try {
             Drug drug = drugRepository.findById(drugId)
                     .orElseThrow(() -> new RuntimeException("Drug not found"));
-            return BaseResponseDTO.success(drugMapper.toDTO(drug), "Drug details retrieved");
+            return BaseResponseDTO.success("Drug details retrieved", drugMapper.toDTO(drug));
         } catch (Exception e) {
             log.error("Error getting drug details", e);
             return BaseResponseDTO.error("Failed to get drug details: " + e.getMessage());
@@ -57,7 +57,7 @@ public class DrugService {
         try {
             // TODO: Implement drug interaction checking
             // TODO: Check for patient allergies
-            return BaseResponseDTO.success(new DrugInteractionCheckDTO(false, List.of(), List.of()), "Interaction check completed");
+            return BaseResponseDTO.success("Interaction check completed", new DrugInteractionCheckDTO(false, List.of(), List.of()));
         } catch (Exception e) {
             log.error("Error checking drug interactions", e);
             return BaseResponseDTO.error("Failed to check interactions: " + e.getMessage());
@@ -68,7 +68,7 @@ public class DrugService {
     public BaseResponseDTO<List<DrugDTO>> getControlledSubstances(Pageable pageable) {
         try {
             Page<Drug> drugs = drugRepository.findControlledSubstances(pageable);
-            return BaseResponseDTO.success(drugMapper.toDTOList(drugs.getContent()), "Controlled substances retrieved");
+            return BaseResponseDTO.success("Controlled substances retrieved", drugMapper.toDTOList(drugs.getContent()));
         } catch (Exception e) {
             log.error("Error getting controlled substances", e);
             return BaseResponseDTO.error("Failed to get controlled substances: " + e.getMessage());

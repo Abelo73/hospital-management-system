@@ -42,7 +42,8 @@ public class NotificationService {
             notification.setNotificationType(request.getNotificationType());
             notification.setTitle(request.getTitle());
             notification.setMessage(request.getMessage());
-            notification.setChannels(notificationMapper.channelsToJson(request.getChannels()));
+            notification.setChannels(notificationMapper.channelsToJson(
+                    request.getChannels().stream().map(Enum::name).collect(java.util.stream.Collectors.toList())));
             notification.setPriority(request.getPriority() != null ? request.getPriority() : Priority.MEDIUM);
             notification.setStatus(NotificationStatus.PENDING);
             notification.setRecipientType(request.getRecipientType());
@@ -60,7 +61,7 @@ public class NotificationService {
                 processNotification(saved);
             }
 
-            return BaseResponseDTO.success(notificationMapper.toDTO(saved), "Notification queued successfully");
+            return BaseResponseDTO.success("Notification queued successfully", notificationMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error sending notification", e);
             return BaseResponseDTO.error("Failed to send notification: " + e.getMessage());
@@ -68,7 +69,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public BaseResponseDTO<NotificationDTO> sendBulkNotification(SendNotificationRequest request, List<String> recipientIds, String createdBy) {
+    public BaseResponseDTO<Void> sendBulkNotification(SendNotificationRequest request, List<String> recipientIds, String createdBy) {
         try {
             for (String recipientId : recipientIds) {
                 SendNotificationRequest individualRequest = new SendNotificationRequest(
@@ -87,7 +88,7 @@ public class NotificationService {
                 );
                 sendNotification(individualRequest, createdBy);
             }
-            return BaseResponseDTO.success(null, "Bulk notifications queued successfully");
+            return BaseResponseDTO.<Void>success("Bulk notifications queued successfully", null);
         } catch (Exception e) {
             log.error("Error sending bulk notification", e);
             return BaseResponseDTO.error("Failed to send bulk notifications: " + e.getMessage());
@@ -159,7 +160,7 @@ public class NotificationService {
         try {
             Notification notification = notificationRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Notification not found"));
-            return BaseResponseDTO.success(notificationMapper.toDTO(notification), "Notification status retrieved");
+            return BaseResponseDTO.success("Notification status retrieved", notificationMapper.toDTO(notification));
         } catch (Exception e) {
             log.error("Error getting notification status", e);
             return BaseResponseDTO.error("Failed to get notification status: " + e.getMessage());
@@ -171,11 +172,12 @@ public class NotificationService {
         try {
             Page<Notification> notifications;
             if (status != null) {
-                notifications = notificationRepository.findByRecipientIdAndStatusOrderByCreatedAtDesc(recipientId, status);
+                List<Notification> notifList = notificationRepository.findByRecipientIdAndStatusOrderByCreatedAtDesc(recipientId, status);
+                notifications = new org.springframework.data.domain.PageImpl<>(notifList, pageable, notifList.size());
             } else {
                 notifications = notificationRepository.findByRecipientId(recipientId, pageable);
             }
-            return BaseResponseDTO.success(notificationMapper.toDTOList(notifications.getContent()), "Notifications retrieved");
+            return BaseResponseDTO.success("Notifications retrieved", notificationMapper.toDTOList(notifications.getContent()));
         } catch (Exception e) {
             log.error("Error getting user notifications", e);
             return BaseResponseDTO.error("Failed to get notifications: " + e.getMessage());
@@ -189,7 +191,7 @@ public class NotificationService {
                     .orElseThrow(() -> new RuntimeException("Notification not found"));
             notification.setStatus(NotificationStatus.DELIVERED);
             notificationRepository.save(notification);
-            return BaseResponseDTO.success(null, "Notification marked as read");
+            return BaseResponseDTO.<Void>success("Notification marked as read", null);
         } catch (Exception e) {
             log.error("Error marking notification as read", e);
             return BaseResponseDTO.error("Failed to mark notification as read: " + e.getMessage());
@@ -203,7 +205,7 @@ public class NotificationService {
                     .orElseThrow(() -> new RuntimeException("Notification not found"));
             notification.setDeleted(true);
             notificationRepository.save(notification);
-            return BaseResponseDTO.success(null, "Notification deleted");
+            return BaseResponseDTO.<Void>success("Notification deleted", null);
         } catch (Exception e) {
             log.error("Error deleting notification", e);
             return BaseResponseDTO.error("Failed to delete notification: " + e.getMessage());

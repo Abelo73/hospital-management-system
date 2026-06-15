@@ -46,7 +46,7 @@ public class DistributionService {
             request.setCreatedBy(requestedBy);
 
             DepartmentRequest saved = distributionRepository.saveDepartmentRequest(request);
-            return BaseResponseDTO.success(distributionMapper.toDTO(saved), "Department request created successfully");
+            return BaseResponseDTO.success("Department request created successfully", distributionMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating department request", e);
             return BaseResponseDTO.error("Failed to create department request: " + e.getMessage());
@@ -62,7 +62,7 @@ public class DistributionService {
             } else {
                 requests = distributionRepository.findDepartmentRequestsByStatus(RequestStatus.PENDING, pageable);
             }
-            return BaseResponseDTO.success(distributionMapper.toDTOList(requests.getContent()), "Pending requests retrieved");
+            return BaseResponseDTO.success("Pending requests retrieved", distributionMapper.toDTOList(requests.getContent()));
         } catch (Exception e) {
             log.error("Error getting pending requests", e);
             return BaseResponseDTO.error("Failed to get pending requests: " + e.getMessage());
@@ -86,7 +86,8 @@ public class DistributionService {
             request.setUpdatedBy(approvedBy);
 
             distributionRepository.saveDepartmentRequest(request);
-            return BaseResponseDTO.success(null, approved ? "Request approved" : "Request rejected");
+            String approvalMsg = approved ? "Request approved" : "Request rejected";
+            return BaseResponseDTO.<Void>success(approvalMsg, null);
         } catch (Exception e) {
             log.error("Error approving request", e);
             return BaseResponseDTO.error("Failed to approve request: " + e.getMessage());
@@ -121,7 +122,7 @@ public class DistributionService {
             request.setStatus(RequestStatus.ISSUED);
             distributionRepository.saveDepartmentRequest(request);
 
-            return BaseResponseDTO.success(distributionMapper.toDTO(saved), "Stock issued successfully");
+            return BaseResponseDTO.success("Stock issued successfully", distributionMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error issuing stock", e);
             return BaseResponseDTO.error("Failed to issue stock: " + e.getMessage());

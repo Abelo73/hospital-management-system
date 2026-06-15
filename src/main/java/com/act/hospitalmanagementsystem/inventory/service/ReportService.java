@@ -16,7 +16,7 @@ public class ReportService {
         try {
             // TODO: Implement stock report generation
             log.info("Generating stock report: location={}, category={}, format={}", location, category, format);
-            return BaseResponseDTO.success(Map.of("message", "Stock report generation not yet implemented"), "Report generation placeholder");
+            return BaseResponseDTO.success("Report generation placeholder", Map.of("message", "Stock report generation not yet implemented"));
         } catch (Exception e) {
             log.error("Error generating stock report", e);
             return BaseResponseDTO.error("Failed to generate stock report: " + e.getMessage());
@@ -27,7 +27,7 @@ public class ReportService {
         try {
             // TODO: Implement movement report generation
             log.info("Generating movement report: startDate={}, endDate={}, itemType={}, format={}", startDate, endDate, itemType, format);
-            return BaseResponseDTO.success(Map.of("message", "Movement report generation not yet implemented"), "Report generation placeholder");
+            return BaseResponseDTO.success("Report generation placeholder", Map.of("message", "Movement report generation not yet implemented"));
         } catch (Exception e) {
             log.error("Error generating movement report", e);
             return BaseResponseDTO.error("Failed to generate movement report: " + e.getMessage());
@@ -38,7 +38,7 @@ public class ReportService {
         try {
             // TODO: Implement consumption report generation
             log.info("Generating consumption report: startDate={}, endDate={}, department={}, format={}", startDate, endDate, department, format);
-            return BaseResponseDTO.success(Map.of("message", "Consumption report generation not yet implemented"), "Report generation placeholder");
+            return BaseResponseDTO.success("Report generation placeholder", Map.of("message", "Consumption report generation not yet implemented"));
         } catch (Exception e) {
             log.error("Error generating consumption report", e);
             return BaseResponseDTO.error("Failed to generate consumption report: " + e.getMessage());

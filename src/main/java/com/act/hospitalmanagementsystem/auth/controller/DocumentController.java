@@ -79,7 +79,7 @@ public class DocumentController {
     @PreAuthorize("hasAuthority('DOCUMENT_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteDocument(@PathVariable UUID documentId) {
         documentService.deleteDocument(documentId);
-        return ResponseEntity.ok(BaseResponseDTO.success("Document deleted successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Document deleted successfully", null));
     }
 
     @GetMapping("/pending-verification")

@@ -6,6 +6,7 @@ import com.act.hospitalmanagementsystem.notification.entity.UserPreference;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class PreferenceMapper {

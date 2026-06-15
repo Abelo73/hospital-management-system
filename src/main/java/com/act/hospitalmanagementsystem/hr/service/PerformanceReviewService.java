@@ -41,7 +41,7 @@ public class PerformanceReviewService {
             review.setCreatedBy(createdBy);
 
             PerformanceReview saved = performanceReviewRepository.save(review);
-            return BaseResponseDTO.success(performanceReviewMapper.toDTO(saved), "Performance review created successfully");
+            return BaseResponseDTO.success("Performance review created successfully", performanceReviewMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating performance review", e);
             return BaseResponseDTO.error("Failed to create performance review: " + e.getMessage());
@@ -62,7 +62,7 @@ public class PerformanceReviewService {
             } else {
                 reviews = performanceReviewRepository.findAll();
             }
-            return BaseResponseDTO.success(performanceReviewMapper.toDTOList(reviews), "Performance reviews retrieved");
+            return BaseResponseDTO.success("Performance reviews retrieved", performanceReviewMapper.toDTOList(reviews));
         } catch (Exception e) {
             log.error("Error getting performance reviews", e);
             return BaseResponseDTO.error("Failed to get performance reviews: " + e.getMessage());

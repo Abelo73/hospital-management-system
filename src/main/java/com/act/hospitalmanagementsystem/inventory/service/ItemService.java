@@ -37,7 +37,7 @@ public class ItemService {
             item.setCreatedBy(createdBy);
             Item saved = itemRepository.save(item);
 
-            return BaseResponseDTO.success(itemMapper.toDTO(saved), "Item created successfully");
+            return BaseResponseDTO.success("Item created successfully", itemMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating item", e);
             return BaseResponseDTO.error("Failed to create item: " + e.getMessage());
@@ -57,7 +57,7 @@ public class ItemService {
             } else {
                 items = itemRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success(itemMapper.toDTOList(items.getContent()), "Items retrieved");
+            return BaseResponseDTO.success("Items retrieved", itemMapper.toDTOList(items.getContent()));
         } catch (Exception e) {
             log.error("Error getting items", e);
             return BaseResponseDTO.error("Failed to get items: " + e.getMessage());
@@ -69,7 +69,7 @@ public class ItemService {
         try {
             Item item = itemRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Item not found"));
-            return BaseResponseDTO.success(itemMapper.toDTO(item), "Item retrieved");
+            return BaseResponseDTO.success("Item retrieved", itemMapper.toDTO(item));
         } catch (Exception e) {
             log.error("Error getting item", e);
             return BaseResponseDTO.error("Failed to get item: " + e.getMessage());
@@ -81,7 +81,7 @@ public class ItemService {
         try {
             Item item = itemRepository.findByItemCode(itemCode)
                     .orElseThrow(() -> new RuntimeException("Item not found"));
-            return BaseResponseDTO.success(itemMapper.toDTO(item), "Item retrieved");
+            return BaseResponseDTO.success("Item retrieved", itemMapper.toDTO(item));
         } catch (Exception e) {
             log.error("Error getting item by code", e);
             return BaseResponseDTO.error("Failed to get item: " + e.getMessage());
@@ -98,7 +98,7 @@ public class ItemService {
             item.setUpdatedBy(updatedBy);
             Item saved = itemRepository.save(item);
 
-            return BaseResponseDTO.success(itemMapper.toDTO(saved), "Item updated successfully");
+            return BaseResponseDTO.success("Item updated successfully", itemMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error updating item", e);
             return BaseResponseDTO.error("Failed to update item: " + e.getMessage());
@@ -112,7 +112,7 @@ public class ItemService {
                     .orElseThrow(() -> new RuntimeException("Item not found"));
             item.setDeleted(true);
             itemRepository.save(item);
-            return BaseResponseDTO.success(null, "Item deleted successfully");
+            return BaseResponseDTO.<Void>success("Item deleted successfully", null);
         } catch (Exception e) {
             log.error("Error deleting item", e);
             return BaseResponseDTO.error("Failed to delete item: " + e.getMessage());
@@ -123,7 +123,7 @@ public class ItemService {
     public BaseResponseDTO<List<ItemDTO>> searchItems(String query, Pageable pageable) {
         try {
             Page<Item> items = itemRepository.searchItems(query, pageable);
-            return BaseResponseDTO.success(itemMapper.toDTOList(items.getContent()), "Items retrieved");
+            return BaseResponseDTO.success("Items retrieved", itemMapper.toDTOList(items.getContent()));
         } catch (Exception e) {
             log.error("Error searching items", e);
             return BaseResponseDTO.error("Failed to search items: " + e.getMessage());

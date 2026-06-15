@@ -64,7 +64,7 @@ public class DistributionMapper {
         return requests.stream().map(this::toDTO).toList();
     }
 
-    public List<StockIssueDTO> toDTOList(List<StockIssue> issues) {
+    public List<StockIssueDTO> toStockIssueDTOList(List<StockIssue> issues) {
         return issues.stream().map(this::toDTO).toList();
     }
 }

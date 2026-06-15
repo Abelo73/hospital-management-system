@@ -1,6 +1,7 @@
 package com.act.hospitalmanagementsystem.pharmacy.controller;
 
 import com.act.hospitalmanagementsystem.common.dto.BaseResponseDTO;
+import com.act.hospitalmanagementsystem.pharmacy.dto.PatientMedicationDTO;
 import com.act.hospitalmanagementsystem.pharmacy.service.PatientMedicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,15 @@ public class PatientMedicationController {
 
     @GetMapping("/{patientId}/medications")
     @PreAuthorize("hasAuthority('PHARMACY_READ')")
-    public ResponseEntity<BaseResponseDTO<List<Object>>> getMedicationHistory(@PathVariable UUID patientId) {
-        BaseResponseDTO<List<Object>> response = patientMedicationService.getMedicationHistory(patientId);
+    public ResponseEntity<BaseResponseDTO<List<PatientMedicationDTO>>> getMedicationHistory(@PathVariable UUID patientId) {
+        BaseResponseDTO<List<PatientMedicationDTO>> response = patientMedicationService.getMedicationHistory(patientId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{patientId}/medications/current")
     @PreAuthorize("hasAuthority('PHARMACY_READ')")
-    public ResponseEntity<BaseResponseDTO<List<Object>>> getCurrentMedications(@PathVariable UUID patientId) {
-        BaseResponseDTO<List<Object>> response = patientMedicationService.getCurrentMedications(patientId);
+    public ResponseEntity<BaseResponseDTO<List<PatientMedicationDTO>>> getCurrentMedications(@PathVariable UUID patientId) {
+        BaseResponseDTO<List<PatientMedicationDTO>> response = patientMedicationService.getCurrentMedications(patientId);
         return ResponseEntity.ok(response);
     }
 

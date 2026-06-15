@@ -34,7 +34,7 @@ public class TemplateMapper {
         dto.setVariables(template.getVariables());
         dto.setLanguage(template.getLanguage());
         dto.setIsActive(template.getIsActive());
-        dto.setVersion(template.getVersion());
+        dto.setVersion(template.getTemplateVersion());
         dto.setDescription(template.getDescription());
         dto.setCreatedAt(template.getCreatedAt());
         dto.setCreatedBy(template.getCreatedBy());
@@ -56,7 +56,7 @@ public class TemplateMapper {
         template.setVariables(variablesToJson(request.getVariables()));
         template.setLanguage(request.getLanguage());
         template.setIsActive(request.getIsActive());
-        template.setVersion(1);
+        template.setTemplateVersion(1);
         template.setDescription(request.getDescription());
         return template;
     }

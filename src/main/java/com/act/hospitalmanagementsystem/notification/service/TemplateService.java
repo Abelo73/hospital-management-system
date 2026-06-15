@@ -39,7 +39,7 @@ public class TemplateService {
             template.setCreatedBy(createdBy);
             Template saved = templateRepository.save(template);
 
-            return BaseResponseDTO.success(templateMapper.toDTO(saved), "Template created successfully");
+            return BaseResponseDTO.success("Template created successfully", templateMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error creating template", e);
             return BaseResponseDTO.error("Failed to create template: " + e.getMessage());
@@ -50,7 +50,7 @@ public class TemplateService {
     public BaseResponseDTO<List<TemplateDTO>> getAllTemplates(Pageable pageable) {
         try {
             Page<Template> templates = templateRepository.findAll(pageable);
-            return BaseResponseDTO.success(templateMapper.toDTOList(templates.getContent()), "Templates retrieved");
+            return BaseResponseDTO.success("Templates retrieved", templateMapper.toDTOList(templates.getContent()));
         } catch (Exception e) {
             log.error("Error getting templates", e);
             return BaseResponseDTO.error("Failed to get templates: " + e.getMessage());
@@ -62,7 +62,7 @@ public class TemplateService {
         try {
             Template template = templateRepository.findByTemplateCode(templateCode)
                     .orElseThrow(() -> new RuntimeException("Template not found"));
-            return BaseResponseDTO.success(templateMapper.toDTO(template), "Template retrieved");
+            return BaseResponseDTO.success("Template retrieved", templateMapper.toDTO(template));
         } catch (Exception e) {
             log.error("Error getting template by code", e);
             return BaseResponseDTO.error("Failed to get template: " + e.getMessage());
@@ -80,7 +80,7 @@ public class TemplateService {
             template.setUpdatedBy(updatedBy);
             Template saved = templateRepository.save(template);
 
-            return BaseResponseDTO.success(templateMapper.toDTO(saved), "Template updated successfully");
+            return BaseResponseDTO.success("Template updated successfully", templateMapper.toDTO(saved));
         } catch (Exception e) {
             log.error("Error updating template", e);
             return BaseResponseDTO.error("Failed to update template: " + e.getMessage());
@@ -103,7 +103,7 @@ public class TemplateService {
             // TODO: Create a test notification and send it
             log.info("Test email sent to {} using template {}", recipientEmail, template.getTemplateCode());
 
-            return BaseResponseDTO.success(null, "Test email sent successfully");
+            return BaseResponseDTO.<Void>success("Test email sent successfully", null);
         } catch (Exception e) {
             log.error("Error testing template", e);
             return BaseResponseDTO.error("Failed to test template: " + e.getMessage());

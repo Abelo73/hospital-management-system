@@ -86,7 +86,7 @@ public class ApprovalController {
             @PathVariable UUID userId,
             Authentication authentication) {
         approvalService.resubmitApprovalRequest(userId, authentication.getName());
-        return ResponseEntity.ok(BaseResponseDTO.success("Approval request resubmitted successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Approval request resubmitted successfully", null));
     }
 
     @GetMapping("/status/{userId}")

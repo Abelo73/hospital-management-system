@@ -60,20 +60,20 @@ public class RoleController {
     @PreAuthorize("hasAuthority('ROLE_DELETE')")
     public ResponseEntity<BaseResponseDTO<Void>> deleteRole(@PathVariable UUID id) {
         roleService.deleteRole(id);
-        return ResponseEntity.ok(BaseResponseDTO.success("Role deleted successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Role deleted successfully", null));
     }
 
     @PostMapping("/{id}/permissions/{permissionName}")
     @PreAuthorize("hasAuthority('ROLE_WRITE')")
     public ResponseEntity<BaseResponseDTO<Void>> assignPermission(@PathVariable UUID id, @PathVariable String permissionName) {
         roleService.assignPermission(id, permissionName);
-        return ResponseEntity.ok(BaseResponseDTO.success("Permission assigned successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Permission assigned successfully", null));
     }
 
     @DeleteMapping("/{id}/permissions/{permissionName}")
     @PreAuthorize("hasAuthority('ROLE_WRITE')")
     public ResponseEntity<BaseResponseDTO<Void>> removePermission(@PathVariable UUID id, @PathVariable String permissionName) {
         roleService.removePermission(id, permissionName);
-        return ResponseEntity.ok(BaseResponseDTO.success("Permission removed successfully", null));
+        return ResponseEntity.ok(BaseResponseDTO.<Void>success("Permission removed successfully", null));
     }
 }
