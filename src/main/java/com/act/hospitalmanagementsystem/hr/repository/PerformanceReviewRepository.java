@@ -2,6 +2,8 @@ package com.act.hospitalmanagementsystem.hr.repository;
 
 import com.act.hospitalmanagementsystem.hr.entity.PerformanceReview;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -15,5 +17,6 @@ public interface PerformanceReviewRepository extends JpaRepository<PerformanceRe
 
     List<PerformanceReview> findByReviewerId(UUID reviewerId);
 
-    List<PerformanceReview> findByReviewPeriodBetween(LocalDate startDate, LocalDate endDate);
+    @Query("SELECT r FROM PerformanceReview r WHERE r.reviewPeriodStart >= :startDate AND r.reviewPeriodEnd <= :endDate")
+    List<PerformanceReview> findByReviewPeriodBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
