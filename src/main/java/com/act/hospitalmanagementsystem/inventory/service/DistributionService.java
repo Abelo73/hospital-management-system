@@ -27,6 +27,7 @@ public class DistributionService {
 
     private final DistributionRepository distributionRepository;
     private final DistributionMapper distributionMapper;
+    private final StockService stockService;
 
     @Transactional
     public BaseResponseDTO<DepartmentRequestDTO> createDepartmentRequest(String department, LocalDate requiredDate,
@@ -114,7 +115,22 @@ public class DistributionService {
             issue.setTotalQuantity(calculateTotalQuantity(items));
             issue.setCreatedBy(receivedBy.toString());
 
-            // TODO: Update stock levels based on issued items
+            // Update stock levels based on issued items
+            for (Map<String, Object> item : items) {
+                UUID itemId = UUID.fromString(item.get("itemId").toString());
+                UUID locationId = UUID.fromString(item.get("locationId").toString()); // Main warehouse location
+                Integer quantity = (Integer) item.get("quantity");
+                
+                stockService.adjustStock(
+                    itemId, 
+                    locationId, 
+                    null, // batchId
+                    quantity, 
+                    "Distribution Issue: " + issue.getIssueNumber(), 
+                    "DECREASE", 
+                    receivedBy.toString()
+                );
+            }
 
             StockIssue saved = distributionRepository.saveStockIssue(issue);
 

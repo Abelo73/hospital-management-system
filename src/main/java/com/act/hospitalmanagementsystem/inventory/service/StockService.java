@@ -5,6 +5,7 @@ import com.act.hospitalmanagementsystem.inventory.dto.StockDTO;
 import com.act.hospitalmanagementsystem.inventory.entity.Stock;
 import com.act.hospitalmanagementsystem.inventory.enums.StockStatus;
 import com.act.hospitalmanagementsystem.inventory.mapper.StockMapper;
+import com.act.hospitalmanagementsystem.inventory.repository.LocationRepository;
 import com.act.hospitalmanagementsystem.inventory.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class StockService {
 
     private final StockRepository stockRepository;
+    private final LocationRepository locationRepository;
     private final StockMapper stockMapper;
 
     @Transactional(readOnly = true)
@@ -130,7 +132,9 @@ public class StockService {
                     .orElse(new Stock());
             if (toStock.getId() == null) {
                 toStock.setItem(fromStock.getItem());
-                toStock.setLocation(fromStock.getLocation());
+                // Find destination location
+                toStock.setLocation(locationRepository.findById(toLocationId)
+                        .orElseThrow(() -> new RuntimeException("Destination location not found")));
                 toStock.setBatch(fromStock.getBatch());
                 toStock.setQuantity(quantity);
                 toStock.setAvailableQuantity(quantity);

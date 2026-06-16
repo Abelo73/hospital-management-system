@@ -15,12 +15,16 @@ import java.util.UUID;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, UUID> {
 
-    Optional<Item> findByItemCode(String itemCode);
+    @Query("SELECT i FROM Item i WHERE i.itemCode = :itemCode AND i.deleted = false")
+    Optional<Item> findByItemCode(@Param("itemCode") String itemCode);
 
-    Page<Item> findByItemType(ItemType itemType, Pageable pageable);
+    @Query("SELECT i FROM Item i WHERE i.itemType = :itemType AND i.deleted = false")
+    Page<Item> findByItemType(@Param("itemType") ItemType itemType, Pageable pageable);
 
-    Page<Item> findByCategory(String category, Pageable pageable);
+    @Query("SELECT i FROM Item i WHERE i.category = :category AND i.deleted = false")
+    Page<Item> findByCategory(@Param("category") String category, Pageable pageable);
 
+    @Query("SELECT i FROM Item i WHERE i.isActive = true AND i.deleted = false")
     Page<Item> findByIsActiveTrue(Pageable pageable);
 
     @Query("SELECT i FROM Item i WHERE i.deleted = false AND i.isActive = true AND (i.itemName LIKE %:query% OR i.itemCode LIKE %:query% OR i.description LIKE %:query%)")
