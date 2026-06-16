@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController("inventoryReportController")
-@RequestMapping("/api/inventory/reports")
+@RequestMapping("/inventory/reports")
 @RequiredArgsConstructor
 public class ReportController {
 

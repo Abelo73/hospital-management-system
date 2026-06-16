@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/inventory/expiry")
+@RequestMapping("/inventory/expiry")
 @RequiredArgsConstructor
 public class ExpiryController {
 

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/inventory/stock")
+@RequestMapping("/inventory/stock")
 @RequiredArgsConstructor
 public class StockController {
 
