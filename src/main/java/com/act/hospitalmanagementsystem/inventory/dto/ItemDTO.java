@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -34,6 +35,8 @@ public class ItemDTO {
     private Boolean requiresPrescription;
     private Boolean isColdChain;
     private String imageUrl;
+    private BigDecimal unitPrice;
+    private BigDecimal purchasePrice;
     private String specifications;
     private Boolean isActive;
     private LocalDateTime createdAt;

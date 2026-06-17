@@ -1,0 +1,25 @@
+-- Seed Data for Inventory Items
+INSERT INTO inventory_items (id, item_code, item_name, item_type, category, description, manufacturer, brand, unit_of_measure, pack_size, unit_price, purchase_price, is_active, created_by)
+VALUES 
+(gen_random_uuid(), 'DRUG-001', 'Paracetamol 500mg', 'DRUG', 'Analgesics', 'Common pain reliever and fever reducer', 'GSK', 'Panadol', 'Tablet', 10, 2.50, 1.80, true, 'admin'),
+(gen_random_uuid(), 'DRUG-002', 'Amoxicillin 250mg', 'DRUG', 'Antibiotics', 'Broad-spectrum antibiotic', 'Pfizer', 'Amoxil', 'Capsule', 12, 15.00, 10.50, true, 'admin'),
+(gen_random_uuid(), 'DRUG-003', 'Metformin 500mg', 'DRUG', 'Antidiabetics', 'Medication for type 2 diabetes', 'Merck', 'Glucophage', 'Tablet', 30, 8.00, 5.20, true, 'admin'),
+(gen_random_uuid(), 'DRUG-004', 'Amlodipine 5mg', 'DRUG', 'Antihypertensives', 'Calcium channel blocker for high blood pressure', 'Novartis', 'Norvasc', 'Tablet', 28, 12.50, 8.40, true, 'admin'),
+(gen_random_uuid(), 'DRUG-005', 'Omeprazole 20mg', 'DRUG', 'Antacids', 'Proton pump inhibitor for acid reflux', 'AstraZeneca', 'Prilosec', 'Capsule', 14, 20.00, 14.00, true, 'admin'),
+(gen_random_uuid(), 'SUPP-001', 'Surgical Gloves (Size 7.5)', 'SUPPLY', 'Consumables', 'Sterile latex surgical gloves', 'Molnlycke', 'Biogel', 'Pair', 50, 1.20, 0.85, true, 'admin'),
+(gen_random_uuid(), 'SUPP-002', 'Face Mask N95', 'SUPPLY', 'Consumables', 'High-filtration respiratory face mask', '3M', 'Aura', 'Piece', 20, 3.50, 2.20, true, 'admin'),
+(gen_random_uuid(), 'SUPP-003', 'Adhesive Bandages', 'SUPPLY', 'First Aid', 'Breathable adhesive strips', 'Johnson & Johnson', 'Band-Aid', 'Box', 100, 5.00, 3.10, true, 'admin'),
+(gen_random_uuid(), 'SUPP-004', 'Hand Sanitizer 500ml', 'SUPPLY', 'Hygiene', '70% alcohol-based hand rub', 'Purell', 'Advanced', 'Bottle', 1, 6.00, 4.00, true, 'admin'),
+(gen_random_uuid(), 'SUPP-005', 'IV Cannula 20G', 'SUPPLY', 'Consumables', 'Peripheral intravenous catheter', 'BD', 'Venflon', 'Piece', 50, 1.80, 1.20, true, 'admin'),
+(gen_random_uuid(), 'EQP-001', 'Sphygmomanometer', 'EQUIPMENT', 'Diagnostic', 'Manual blood pressure monitor', 'Welch Allyn', 'Tycos', 'Unit', 1, 85.00, 60.00, true, 'admin'),
+(gen_random_uuid(), 'EQP-002', 'Stethoscope', 'EQUIPMENT', 'Diagnostic', 'High-acoustic sensitivity stethoscope', 'Littmann', 'Classic III', 'Unit', 1, 120.00, 95.00, true, 'admin'),
+(gen_random_uuid(), 'EQP-003', 'Pulse Oximeter', 'EQUIPMENT', 'Diagnostic', 'Fingertip oxygen saturation monitor', 'Masimo', 'MightySat', 'Unit', 1, 45.00, 32.00, true, 'admin'),
+(gen_random_uuid(), 'EQP-004', 'Infusion Pump', 'EQUIPMENT', 'Medical Device', 'Programmable volumetric infusion pump', 'Baxter', 'Flo-Gard', 'Unit', 1, 1500.00, 1200.00, true, 'admin'),
+(gen_random_uuid(), 'EQP-005', 'Nebulizer', 'EQUIPMENT', 'Respiratory', 'Compressor-driven nebulizer system', 'Omron', 'NE-C28P', 'Unit', 1, 65.00, 48.00, true, 'admin'),
+(gen_random_uuid(), 'REAG-001', 'Glucose Test Strips', 'LAB_REAGENT', 'Lab Supplies', 'Blood glucose monitoring strips', 'Roche', 'Accu-Chek', 'Box', 50, 25.00, 18.50, true, 'admin'),
+(gen_random_uuid(), 'REAG-002', 'Alcohol Swabs', 'SUPPLY', 'Consumables', '70% isopropyl alcohol prep pads', 'BD', 'Alcohol Prep', 'Box', 100, 4.00, 2.50, true, 'admin'),
+(gen_random_uuid(), 'FURN-001', 'Hospital Bed (Manual)', 'FURNITURE', 'Ward', 'Three-function manual patient bed', 'Hillrom', 'Basic', 'Unit', 1, 850.00, 650.00, true, 'admin'),
+(gen_random_uuid(), 'FURN-002', 'Wheelchair', 'FURNITURE', 'Mobility', 'Standard lightweight folding wheelchair', 'Invacare', 'Action', 'Unit', 1, 280.00, 210.00, true, 'admin'),
+(gen_random_uuid(), 'OFF-001', 'Medical File Folders', 'OFFICE_SUPPLY', 'Administrative', 'Heavy-duty lateral file folders', 'Smead', 'Organized', 'Pack', 50, 18.00, 12.00, true, 'admin'),
+(gen_random_uuid(), 'DRUG-006', 'Ibuprofen 400mg', 'DRUG', 'Analgesics', 'NSAID for pain and inflammation', 'Advil', 'Liqui-Gels', 'Tablet', 20, 6.50, 4.20, true, 'admin'),
+(gen_random_uuid(), 'DRUG-007', 'Loratadine 10mg', 'DRUG', 'Antihistamines', 'Non-drowsy allergy relief', 'Bayer', 'Claritin', 'Tablet', 10, 9.00, 6.30, true, 'admin');

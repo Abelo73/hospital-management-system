@@ -43,6 +43,8 @@ public class ItemMapper {
         dto.setIsActive(item.getIsActive());
         dto.setCreatedAt(item.getCreatedAt());
         dto.setCreatedBy(item.getCreatedBy());
+        dto.setUnitPrice(item.getUnitPrice());
+        dto.setPurchasePrice(item.getPurchasePrice());
         return dto;
     }
 
@@ -73,6 +75,8 @@ public class ItemMapper {
         item.setRequiresPrescription(request.getRequiresPrescription());
         item.setIsColdChain(request.getIsColdChain());
         item.setImageUrl(request.getImageUrl());
+        item.setUnitPrice(request.getUnitPrice());
+        item.setPurchasePrice(request.getPurchasePrice());
         item.setSpecifications(request.getSpecifications());
         item.setIsActive(true);
         return item;
@@ -145,6 +149,12 @@ public class ItemMapper {
         }
         if (request.getIsActive() != null) {
             item.setIsActive(request.getIsActive());
+        }
+        if (request.getUnitPrice() != null) {
+            item.setUnitPrice(request.getUnitPrice());
+        }
+        if (request.getPurchasePrice() != null) {
+            item.setPurchasePrice(request.getPurchasePrice());
         }
     }
 

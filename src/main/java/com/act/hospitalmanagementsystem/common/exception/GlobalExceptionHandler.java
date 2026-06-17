@@ -76,7 +76,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponseDTO<Void>> handleGenericException(Exception ex) {
         log.error("Unexpected error occurred", ex);
+        
+        StringBuilder fullMessage = new StringBuilder();
+        fullMessage.append(ex.getMessage() != null ? ex.getMessage() : "An unexpected error occurred.");
+        
+        Throwable cause = ex.getCause();
+        while (cause != null) {
+            fullMessage.append(" [Cause: ").append(cause.getMessage()).append("]");
+            cause = cause.getCause();
+        }
+        
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(BaseResponseDTO.error("An unexpected error occurred. Please contact support if the problem persists.", "INTERNAL_SERVER_ERROR"));
+                .body(BaseResponseDTO.error(fullMessage.toString(), "INTERNAL_SERVER_ERROR"));
     }
 }

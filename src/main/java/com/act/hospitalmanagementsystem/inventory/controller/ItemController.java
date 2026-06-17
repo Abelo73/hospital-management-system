@@ -8,7 +8,9 @@ import com.act.hospitalmanagementsystem.inventory.enums.ItemType;
 import com.act.hospitalmanagementsystem.inventory.service.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,12 +28,12 @@ public class ItemController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('INVENTORY_READ')")
-    public ResponseEntity<BaseResponseDTO<List<ItemDTO>>> getAllItems(
+    public ResponseEntity<BaseResponseDTO<Page<ItemDTO>>> getAllItems(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) ItemType itemType,
             @RequestParam(required = false) String status,
-            Pageable pageable) {
-        BaseResponseDTO<List<ItemDTO>> response = itemService.getAllItems(category, itemType, status, pageable);
+            @PageableDefault(size = 8) Pageable pageable) {
+        BaseResponseDTO<Page<ItemDTO>> response = itemService.getAllItems(category, itemType, status, pageable);
         return ResponseEntity.ok(response);
     }
 
@@ -79,10 +81,10 @@ public class ItemController {
 
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('INVENTORY_READ')")
-    public ResponseEntity<BaseResponseDTO<List<ItemDTO>>> searchItems(
+    public ResponseEntity<BaseResponseDTO<Page<ItemDTO>>> searchItems(
             @RequestParam String query,
-            Pageable pageable) {
-        BaseResponseDTO<List<ItemDTO>> response = itemService.searchItems(query, pageable);
+            @PageableDefault(size = 8) Pageable pageable) {
+        BaseResponseDTO<Page<ItemDTO>> response = itemService.searchItems(query, pageable);
         return ResponseEntity.ok(response);
     }
 }

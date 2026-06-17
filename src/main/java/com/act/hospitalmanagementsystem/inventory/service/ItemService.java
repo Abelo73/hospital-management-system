@@ -45,7 +45,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public BaseResponseDTO<List<ItemDTO>> getAllItems(String category, ItemType itemType, String status, Pageable pageable) {
+    public BaseResponseDTO<Page<ItemDTO>> getAllItems(String category, ItemType itemType, String status, Pageable pageable) {
         try {
             Page<Item> items;
             if (category != null) {
@@ -57,7 +57,7 @@ public class ItemService {
             } else {
                 items = itemRepository.findAll(pageable);
             }
-            return BaseResponseDTO.success("Items retrieved", itemMapper.toDTOList(items.getContent()));
+            return BaseResponseDTO.success("Items retrieved", items.map(itemMapper::toDTO));
         } catch (Exception e) {
             log.error("Error getting items", e);
             return BaseResponseDTO.error("Failed to get items: " + e.getMessage());
@@ -120,10 +120,10 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public BaseResponseDTO<List<ItemDTO>> searchItems(String query, Pageable pageable) {
+    public BaseResponseDTO<Page<ItemDTO>> searchItems(String query, Pageable pageable) {
         try {
             Page<Item> items = itemRepository.searchItems(query, pageable);
-            return BaseResponseDTO.success("Items retrieved", itemMapper.toDTOList(items.getContent()));
+            return BaseResponseDTO.success("Items retrieved", items.map(itemMapper::toDTO));
         } catch (Exception e) {
             log.error("Error searching items", e);
             return BaseResponseDTO.error("Failed to search items: " + e.getMessage());

@@ -79,7 +79,7 @@ logging:
     root: INFO
     org.springframework.security: INFO
     org.hibernate.SQL: INFO
-    com.hms: DEBUG
+    com.act.hospitalmanagementsystem: DEBUG
   filter:
     enabled: ${LOGGING_FILTER_ENABLED:true}
     include-payload: ${LOGGING_FILTER_INCLUDE_PAYLOAD:true}

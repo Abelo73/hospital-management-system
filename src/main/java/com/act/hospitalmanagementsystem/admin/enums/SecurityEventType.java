@@ -1,0 +1,8 @@
+package com.act.hospitalmanagementsystem.admin.enums;
+
+public enum SecurityEventType {
+    LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT,
+    PASSWORD_CHANGE, PASSWORD_RESET,
+    UNAUTHORIZED_ACCESS, ROLE_CHANGE,
+    SESSION_TERMINATED, ACCOUNT_LOCKED, ACCOUNT_UNLOCKED
+}

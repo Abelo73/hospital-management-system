@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -80,7 +84,14 @@ public class Item extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "specifications", columnDefinition = "JSON")
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice = BigDecimal.ZERO;
+
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice = BigDecimal.ZERO;
+
+    @Column(name = "specifications", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String specifications;
 
     @Column(name = "is_active", nullable = false)

@@ -4,5 +4,8 @@ public enum ItemType {
     DRUG,
     SUPPLY,
     EQUIPMENT,
-    CONSUMABLE
+    CONSUMABLE,
+    FURNITURE,
+    LAB_REAGENT,
+    OFFICE_SUPPLY
 }
