@@ -14,3 +14,20 @@ VALUES
 (gen_random_uuid(), 'EMP008', 'Jennifer', 'Martinez', 'Maria', 'jennifer.martinez@hospital.com', '+254712345692', '1991-09-28', 'FEMALE', '258 Health Center', 'Nairobi', 'Nairobi', 'Kenya', '00100', 'ADMINISTRATIVE', 'HR', 'HR Manager', '2020-07-01', 'ACTIVE', 90000.00, 'Equity Bank', '7788990011', 'A077889900', 'SS077889900', 'Carlos Martinez', '+254712345693', 'Brother', 'SHRM certified HR professional', (SELECT id FROM users WHERE username = 'admin')),
 (gen_random_uuid(), 'EMP009', 'James', 'Wilson', NULL, 'james.wilson@hospital.com', '+254712345694', '1987-04-10', 'MALE', '369 Clinic St', 'Mombasa', 'Mombasa', 'Kenya', '80100', 'SUPPORT_STAFF', 'Maintenance', 'Maintenance Supervisor', '2021-01-20', 'ACTIVE', 55000.00, 'KCB Bank', '2233445566', 'A022334455', 'SS022334455', 'Patricia Wilson', '+254712345695', 'Spouse', 'Expert in facility management and equipment maintenance', (SELECT id FROM users WHERE username = 'admin')),
 (gen_random_uuid(), 'EMP010', 'Amanda', 'Garcia', 'Lynn', 'amanda.garcia@hospital.com', '+254712345696', '1993-06-17', 'FEMALE', '741 Wellness Ave', 'Kisumu', 'Kisumu', 'Kenya', '40100', 'NURSE', 'Emergency', 'ER Nurse', '2021-08-15', 'ACTIVE', 75000.00, 'Standard Chartered', '6655443322', 'A066554433', 'SS066554433', 'Richard Garcia', '+254712345697', 'Father', 'Trauma and emergency care specialist', (SELECT id FROM users WHERE username = 'admin'));
+
+-- Insert Attendance Records (for last 5 days)
+INSERT INTO hr_attendance (id, employee_id, date, check_in_time, check_out_time, status, hours_worked, overtime_hours, notes, created_by)
+SELECT 
+    gen_random_uuid(),
+    e.id,
+    CURRENT_DATE - (n || ' days')::interval,
+    '08:00:00',
+    '17:00:00',
+    CASE WHEN n = 3 THEN 'LATE' ELSE 'PRESENT' END,
+    CASE WHEN n = 3 THEN 7.5 ELSE 9.0 END,
+    CASE WHEN n = 3 THEN 0 ELSE 1.0 END,
+    CASE WHEN n = 3 THEN 'Traffic delay' ELSE 'Regular shift' END,
+    (SELECT id FROM users WHERE username = 'admin')
+FROM hr_employees e
+CROSS JOIN (SELECT 0 as n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) numbers
+WHERE e.employee_number IN ('EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005');
