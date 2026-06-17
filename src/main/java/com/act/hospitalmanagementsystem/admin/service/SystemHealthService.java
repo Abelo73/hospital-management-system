@@ -3,6 +3,7 @@ package com.act.hospitalmanagementsystem.admin.service;
 import com.act.hospitalmanagementsystem.admin.dto.SystemHealthDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,9 @@ import java.util.Map;
 public class SystemHealthService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired(required = false)
+    private RedisTemplate<String, Object> redisTemplate;
 
     public SystemHealthDTO getSystemHealth() {
         Map<String, Object> components = new LinkedHashMap<>();
@@ -41,11 +44,16 @@ public class SystemHealthService {
         // Redis check
         Map<String, Object> redisInfo = new LinkedHashMap<>();
         try {
-            long start = System.currentTimeMillis();
-            redisTemplate.getConnectionFactory().getConnection().ping();
-            long duration = System.currentTimeMillis() - start;
-            redisInfo.put("status", "UP");
-            redisInfo.put("responseTimeMs", duration);
+            if (redisTemplate == null || redisTemplate.getConnectionFactory() == null) {
+                redisInfo.put("status", "UNAVAILABLE");
+                redisInfo.put("error", "Redis not configured");
+            } else {
+                long start = System.currentTimeMillis();
+                redisTemplate.getConnectionFactory().getConnection().ping();
+                long duration = System.currentTimeMillis() - start;
+                redisInfo.put("status", "UP");
+                redisInfo.put("responseTimeMs", duration);
+            }
         } catch (Exception e) {
             redisInfo.put("status", "DOWN");
             redisInfo.put("error", e.getMessage());

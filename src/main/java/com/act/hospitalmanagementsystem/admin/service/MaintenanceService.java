@@ -11,6 +11,7 @@ import com.act.hospitalmanagementsystem.common.exception.ResourceNotFoundExcepti
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,9 @@ public class MaintenanceService {
 
     private final ScheduledTaskRepository scheduledTaskRepository;
     private final AdminMapper adminMapper;
-    private final CacheManager cacheManager;
+
+    @Autowired(required = false)
+    private CacheManager cacheManager;
 
     public List<ScheduledTaskDTO> getAllTasks() {
         return scheduledTaskRepository.findAll().stream()
@@ -100,6 +103,10 @@ public class MaintenanceService {
     }
 
     public void clearAllCaches() {
+        if (cacheManager == null) {
+            log.warn("No CacheManager available — skipping cache clear");
+            return;
+        }
         cacheManager.getCacheNames().forEach(name -> {
             var cache = cacheManager.getCache(name);
             if (cache != null) cache.clear();
