@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/hr/performance-reviews")
+@RequestMapping("/hr/performance-reviews")
 @RequiredArgsConstructor
 public class PerformanceReviewController {
 
