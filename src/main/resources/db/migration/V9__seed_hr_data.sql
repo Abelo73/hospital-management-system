@@ -90,3 +90,20 @@ VALUES
 (gen_random_uuid(), 'Leadership and Management', 'Management skills for supervisors', 'PROFESSIONAL', CURRENT_DATE + INTERVAL '20 days', CURRENT_DATE + INTERVAL '22 days', 'Nairobi', 'External Consultant', 25000.00, 15, 'SCHEDULED', 'For department heads and supervisors', (SELECT id FROM users WHERE username = 'admin')),
 (gen_random_uuid(), 'Infection Control Training', 'Prevention of healthcare-associated infections', 'INTERNAL', CURRENT_DATE + INTERVAL '15 days', CURRENT_DATE + INTERVAL '15 days', 'Nairobi', 'Infection Control Nurse', 0.00, 30, 'SCHEDULED', 'Annual mandatory training', (SELECT id FROM users WHERE username = 'admin')),
 (gen_random_uuid(), 'Electronic Medical Records System', 'Training on new EMR system', 'TECHNICAL', CURRENT_DATE + INTERVAL '7 days', CURRENT_DATE + INTERVAL '8 days', 'Nairobi', 'IT Department', 0.00, 25, 'SCHEDULED', 'Rollout training for all staff', (SELECT id FROM users WHERE username = 'admin'));
+
+-- Insert Training Enrollments
+INSERT INTO hr_training_enrollments (id, training_id, employee_id, enrollment_date, completion_date, status, notes, created_by)
+SELECT 
+    gen_random_uuid(),
+    t.id,
+    e.id,
+    CURRENT_DATE,
+    NULL,
+    'ENROLLED',
+    'Enrolled for upcoming training',
+    (SELECT id FROM users WHERE username = 'admin')
+FROM hr_training t
+CROSS JOIN hr_employees e
+WHERE t.training_name IN ('Advanced Cardiac Life Support', 'Patient Safety and Quality Improvement')
+  AND e.employee_number IN ('EMP001', 'EMP002', 'EMP006', 'EMP010')
+LIMIT 8;
