@@ -31,3 +31,12 @@ SELECT
 FROM hr_employees e
 CROSS JOIN (SELECT 0 as n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) numbers
 WHERE e.employee_number IN ('EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005');
+
+-- Insert Leave Requests
+INSERT INTO hr_leave_requests (id, employee_id, leave_type, start_date, end_date, total_days, reason, status, approved_by, approved_on, notes, created_by)
+VALUES
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP002'), 'ANNUAL', CURRENT_DATE + 7, CURRENT_DATE + 14, 7, 'Family vacation', 'APPROVED', (SELECT id FROM hr_employees WHERE employee_number = 'EMP005'), CURRENT_TIMESTAMP, 'Approved in advance', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP006'), 'SICK', CURRENT_DATE - 2, CURRENT_DATE - 1, 2, 'Flu symptoms', 'APPROVED', (SELECT id FROM hr_employees WHERE employee_number = 'EMP008'), CURRENT_TIMESTAMP - INTERVAL '2 days', 'Medical certificate provided', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP004'), 'MATERNITY', CURRENT_DATE + 30, CURRENT_DATE + 119, 90, 'Expected due date', 'APPROVED', (SELECT id FROM hr_employees WHERE employee_number = 'EMP008'), CURRENT_TIMESTAMP, 'Maternity leave approved per policy', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP010'), 'COMPASSIONATE', CURRENT_DATE - 5, CURRENT_DATE - 3, 3, 'Family funeral', 'APPROVED', (SELECT id FROM hr_employees WHERE employee_number = 'EMP008'), CURRENT_TIMESTAMP - INTERVAL '5 days', 'Bereavement leave', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP009'), 'STUDY', CURRENT_DATE + 60, CURRENT_DATE + 64, 5, 'Technical certification course', 'PENDING', NULL, NULL, 'Awaiting manager approval', (SELECT id FROM users WHERE username = 'admin'));
