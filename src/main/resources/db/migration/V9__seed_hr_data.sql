@@ -107,3 +107,14 @@ CROSS JOIN hr_employees e
 WHERE t.training_name IN ('Advanced Cardiac Life Support', 'Patient Safety and Quality Improvement')
   AND e.employee_number IN ('EMP001', 'EMP002', 'EMP006', 'EMP010')
 LIMIT 8;
+
+-- Insert Benefits
+INSERT INTO hr_benefits (id, employee_id, benefit_type, plan_name, provider, coverage_amount, employee_contribution, employer_contribution, enrollment_date, effective_date, status, dependents, notes, created_by)
+VALUES
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP001'), 'HEALTH_INSURANCE', 'Premium Health Plan', 'AAR Insurance', 1000000.00, 5000.00, 15000.00, '2020-01-15', '2020-02-01', 'ACTIVE', '[{"name":"Jane Smith","relationship":"Spouse","dob":"1988-05-20"}]', 'Family health coverage', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP002'), 'HEALTH_INSURANCE', 'Standard Health Plan', 'Jubilee Insurance', 500000.00, 3000.00, 10000.00, '2019-06-01', '2019-07-01', 'ACTIVE', '[]', 'Individual coverage', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP003'), 'HEALTH_INSURANCE', 'Premium Health Plan', 'AAR Insurance', 1000000.00, 5000.00, 15000.00, '2021-03-10', '2021-04-01', 'ACTIVE', '[{"name":"Mary Williams","relationship":"Mother","dob":"1960-08-15"}]', 'Family coverage with dependent', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP005'), 'HEALTH_INSURANCE', 'Executive Health Plan', 'Britam Insurance', 2000000.00, 8000.00, 25000.00, '2018-01-05', '2018-02-01', 'ACTIVE', '[{"name":"Linda Davis","relationship":"Spouse","dob":"1985-03-10"},{"name":"Tom Davis","relationship":"Child","dob":"2010-07-22"}]', 'Executive family coverage', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP001'), 'LIFE_INSURANCE', 'Group Life Insurance', 'Prudential Insurance', 5000000.00, 2000.00, 8000.00, '2020-01-15', '2020-02-01', 'ACTIVE', '[]', 'Group life insurance', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP002'), 'RETIREMENT', 'Pension Scheme', 'NSSF', 0.00, 200.00, 200.00, '2019-06-01', '2019-07-01', 'ACTIVE', '[]', 'Statutory pension contribution', (SELECT id FROM users WHERE username = 'admin')),
+(gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP005'), 'RETIREMENT', 'Executive Pension', 'Britam Pension', 0.00, 10000.00, 15000.00, '2018-01-05', '2018-02-01', 'ACTIVE', '[]', 'Executive pension scheme', (SELECT id FROM users WHERE username = 'admin'));
