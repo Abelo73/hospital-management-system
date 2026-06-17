@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/hr/employees")
+@RequestMapping("/hr/employees")
 @RequiredArgsConstructor
 public class EmployeeController {
 

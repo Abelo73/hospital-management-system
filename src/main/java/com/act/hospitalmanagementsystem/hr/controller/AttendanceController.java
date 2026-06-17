@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/hr/attendance")
+@RequestMapping("/hr/attendance")
 @RequiredArgsConstructor
 public class AttendanceController {
 

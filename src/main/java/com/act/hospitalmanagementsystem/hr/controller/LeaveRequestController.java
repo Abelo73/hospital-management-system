@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/hr/leave-requests")
+@RequestMapping("/hr/leave-requests")
 @RequiredArgsConstructor
 public class LeaveRequestController {
 
