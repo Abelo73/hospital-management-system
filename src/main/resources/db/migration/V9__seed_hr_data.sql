@@ -40,3 +40,26 @@ VALUES
 (gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP004'), 'MATERNITY', CURRENT_DATE + 30, CURRENT_DATE + 119, 90, 'Expected due date', 'APPROVED', (SELECT id FROM hr_employees WHERE employee_number = 'EMP008'), CURRENT_TIMESTAMP, 'Maternity leave approved per policy', (SELECT id FROM users WHERE username = 'admin')),
 (gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP010'), 'COMPASSIONATE', CURRENT_DATE - 5, CURRENT_DATE - 3, 3, 'Family funeral', 'APPROVED', (SELECT id FROM hr_employees WHERE employee_number = 'EMP008'), CURRENT_TIMESTAMP - INTERVAL '5 days', 'Bereavement leave', (SELECT id FROM users WHERE username = 'admin')),
 (gen_random_uuid(), (SELECT id FROM hr_employees WHERE employee_number = 'EMP009'), 'STUDY', CURRENT_DATE + 60, CURRENT_DATE + 64, 5, 'Technical certification course', 'PENDING', NULL, NULL, 'Awaiting manager approval', (SELECT id FROM users WHERE username = 'admin'));
+
+-- Insert Payroll Records (for current month)
+INSERT INTO hr_payroll (id, employee_id, pay_period_start, pay_period_end, pay_date, gross_pay, net_pay, tax_deduction, insurance_deduction, other_deductions, bonuses, overtime_pay, status, payment_method, transaction_id, notes, created_by)
+SELECT 
+    gen_random_uuid(),
+    e.id,
+    DATE_TRUNC('MONTH', CURRENT_DATE),
+    DATE_TRUNC('MONTH', CURRENT_DATE) + INTERVAL '1 month - 1 day',
+    DATE_TRUNC('MONTH', CURRENT_DATE) + INTERVAL '1 month',
+    e.salary,
+    e.salary * 0.75,
+    e.salary * 0.15,
+    e.salary * 0.05,
+    e.salary * 0.05,
+    CASE WHEN e.employee_type = 'DOCTOR' THEN e.salary * 0.1 ELSE 0 END,
+    CASE WHEN e.employee_type = 'NURSE' THEN e.salary * 0.05 ELSE 0 END,
+    'PAID',
+    'BANK_TRANSFER',
+    'TXN' || SUBSTRING(e.employee_number, 4) || TO_CHAR(CURRENT_DATE, 'YYYYMM'),
+    'Monthly salary payment',
+    (SELECT id FROM users WHERE username = 'admin')
+FROM hr_employees e
+WHERE e.employee_number IN ('EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005', 'EMP006', 'EMP007', 'EMP008', 'EMP009', 'EMP010');
