@@ -22,19 +22,41 @@ public class PayrollController {
 
     private final PayrollService payrollService;
 
-    @PostMapping("/process")
-    @PreAuthorize("hasAuthority('HR_ADMIN')")
-    public ResponseEntity<BaseResponseDTO<PayrollDTO>> processPayroll(
+    @PostMapping
+    @PreAuthorize("hasAuthority('HR_WRITE')")
+    public ResponseEntity<BaseResponseDTO<PayrollDTO>> createPayroll(
             @RequestBody Map<String, Object> request,
             Authentication authentication) {
+        return processPayrollInternal(request, authentication);
+    }
+
+    @PostMapping("/process")
+    @PreAuthorize("hasAuthority('HR_ADMIN')")
+    public ResponseEntity<BaseResponseDTO<PayrollDTO>> processPayrollLegacy(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        return processPayrollInternal(request, authentication);
+    }
+
+    @PostMapping("/{id}/process")
+    @PreAuthorize("hasAuthority('HR_ADMIN')")
+    public ResponseEntity<BaseResponseDTO<PayrollDTO>> processPayrollById(
+            @PathVariable UUID id,
+            Authentication authentication) {
+        String updatedBy = authentication.getName();
+        BaseResponseDTO<PayrollDTO> response = payrollService.markAsPaid(id, "BANK_TRANSFER", null, updatedBy);
+        return ResponseEntity.ok(response);
+    }
+
+    private ResponseEntity<BaseResponseDTO<PayrollDTO>> processPayrollInternal(Map<String, Object> request, Authentication authentication) {
         UUID employeeId = UUID.fromString((String) request.get("employeeId"));
         String payPeriodStart = (String) request.get("payPeriodStart");
         String payPeriodEnd = (String) request.get("payPeriodEnd");
-        Double grossPay = (Double) request.get("grossPay");
-        Double taxDeduction = (Double) request.get("taxDeduction");
-        Double insuranceDeduction = (Double) request.get("insuranceDeduction");
-        Double bonuses = (Double) request.get("bonuses");
-        Double overtimePay = (Double) request.get("overtimePay");
+        Double grossPay = request.get("grossPay") != null ? ((Number) request.get("grossPay")).doubleValue() : 0.0;
+        Double taxDeduction = request.get("taxDeduction") != null ? ((Number) request.get("taxDeduction")).doubleValue() : 0.0;
+        Double insuranceDeduction = request.get("insuranceDeduction") != null ? ((Number) request.get("insuranceDeduction")).doubleValue() : 0.0;
+        Double bonuses = request.get("bonuses") != null ? ((Number) request.get("bonuses")).doubleValue() : 0.0;
+        Double overtimePay = request.get("overtimePay") != null ? ((Number) request.get("overtimePay")).doubleValue() : 0.0;
         String createdBy = authentication.getName();
 
         BaseResponseDTO<PayrollDTO> response = payrollService.processPayroll(
