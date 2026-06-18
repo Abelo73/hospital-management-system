@@ -40,7 +40,7 @@ spring:
       write-dates-as-timestamps: false
 
   cache:
-    type: redis
+    type: ${CACHE_TYPE:simple}
 
   data:
     redis:
