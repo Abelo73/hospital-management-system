@@ -28,4 +28,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 
     @Query("SELECT e FROM Employee e WHERE e.deleted = false AND (e.firstName LIKE %:query% OR e.lastName LIKE %:query% OR e.email LIKE %:query%)")
     Page<Employee> searchEmployees(@Param("query") String query, Pageable pageable);
+
+    long countByBranchIdAndDeletedFalse(UUID branchId);
 }

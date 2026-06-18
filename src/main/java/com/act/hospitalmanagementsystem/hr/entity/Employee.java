@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -107,4 +108,68 @@ public class Employee extends BaseEntity {
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
+
+    // Extended profile fields (V10 migration)
+    @Column(name = "photo_url")
+    private String photoUrl;
+
+    @Column(name = "marital_status")
+    private String maritalStatus;
+
+    @Column(name = "nationality")
+    private String nationality;
+
+    @Column(name = "religion")
+    private String religion;
+
+    @Column(name = "blood_group", length = 10)
+    private String bloodGroup;
+
+    @Column(name = "disability_flag")
+    private Boolean disabilityFlag = false;
+
+    @Column(name = "work_location")
+    private String workLocation;
+
+    @Column(name = "branch_id")
+    private UUID branchId;
+
+    @Column(name = "position_id")
+    private UUID positionId;
+
+    @Column(name = "supervisor_employee_id")
+    private UUID supervisorEmployeeId;
+
+    @Column(name = "employment_category")
+    private String employmentCategory;
+
+    @Column(name = "passport_number")
+    private String passportNumber;
+
+    @Column(name = "national_id")
+    private String nationalId;
+
+    @Column(name = "driver_licence_number")
+    private String driverLicenceNumber;
+
+    @Column(name = "bank_account_holder")
+    private String bankAccountHolder;
+
+    @Column(name = "bank_branch")
+    private String bankBranch;
+
+    @Column(name = "housing_allowance")
+    private Double housingAllowance;
+
+    @Column(name = "transport_allowance")
+    private Double transportAllowance;
+
+    @Column(name = "medical_allowance")
+    private Double medicalAllowance;
+
+    @Column(name = "meal_allowance")
+    private Double mealAllowance;
+
+    @Column(name = "tax_group_id")
+    private UUID taxGroupId;
 }
