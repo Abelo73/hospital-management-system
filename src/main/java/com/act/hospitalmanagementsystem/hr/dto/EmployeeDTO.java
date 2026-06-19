@@ -44,6 +44,28 @@ public class EmployeeDTO {
     private String emergencyContactRelationship;
     private String profilePictureUrl;
     private String notes;
+    // Extended profile fields (V10)
+    private String photoUrl;
+    private String maritalStatus;
+    private String nationality;
+    private String religion;
+    private String bloodGroup;
+    private Boolean disabilityFlag;
+    private String workLocation;
+    private UUID branchId;
+    private UUID positionId;
+    private UUID supervisorEmployeeId;
+    private String employmentCategory;
+    private String passportNumber;
+    private String nationalId;
+    private String driverLicenceNumber;
+    private String bankAccountHolder;
+    private String bankBranch;
+    private Double housingAllowance;
+    private Double transportAllowance;
+    private Double medicalAllowance;
+    private Double mealAllowance;
+    private UUID taxGroupId;
     private LocalDateTime createdAt;
     private String createdBy;
 }
