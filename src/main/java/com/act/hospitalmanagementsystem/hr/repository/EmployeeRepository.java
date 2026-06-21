@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,4 +31,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
     Page<Employee> searchEmployees(@Param("query") String query, Pageable pageable);
 
     long countByBranchIdAndDeletedFalse(UUID branchId);
+
+    long countByDeletedFalse();
+
+    long countByStatusAndDeletedFalse(EmployeeStatus status);
+
+    @Query("SELECT e FROM Employee e WHERE e.deleted = false AND MONTH(e.hireDate) = MONTH(CURRENT_DATE) AND YEAR(e.hireDate) = YEAR(CURRENT_DATE)")
+    List<Employee> findNewHiresThisMonth();
+
+    @Query("SELECT e FROM Employee e WHERE e.deleted = false AND MONTH(e.dateOfBirth) = MONTH(CURRENT_DATE) AND DAY(e.dateOfBirth) BETWEEN DAY(CURRENT_DATE) AND DAY(CURRENT_DATE) + 7")
+    List<Employee> findUpcomingBirthdays();
 }

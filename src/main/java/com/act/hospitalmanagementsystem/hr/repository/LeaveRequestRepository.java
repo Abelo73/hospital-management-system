@@ -6,6 +6,8 @@ import com.act.hospitalmanagementsystem.hr.enums.LeaveType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,4 +24,9 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, UUID
     Page<LeaveRequest> findByLeaveType(LeaveType leaveType, Pageable pageable);
 
     List<LeaveRequest> findByStartDateBetween(LocalDate startDate, LocalDate endDate);
+
+    long countByStatus(LeaveStatus status);
+
+    @Query("SELECT lr FROM LeaveRequest lr WHERE lr.deleted = false AND lr.status = 'APPROVED' AND lr.startDate <= CURRENT_DATE AND lr.endDate >= CURRENT_DATE")
+    List<LeaveRequest> findCurrentlyOnLeave();
 }
