@@ -36,6 +36,11 @@ public class DataInitializer implements CommandLineRunner {
         initializeAdminUser();
         initializeDoctorUser();
         initializeNurseUser();
+        initializePharmacistUser();
+        initializeLabTechnicianUser();
+        initializeBillingUser();
+        initializeHrUser();
+        initializeReceptionistUser();
 
         log.info("Default data initialization completed.");
     }
@@ -137,47 +142,21 @@ public class DataInitializer implements CommandLineRunner {
         roleRepository.save(nurseRole);
         log.info("NURSE role synchronized with permissions ({} total).", nurseRole.getPermissions().size());
 
-        // Create other roles only if they don't exist
-        if (roleRepository.count() <= 3) {
-            log.info("Creating default non-medical roles...");
-            // Create PHARMACIST role
-            Role pharmacistRole = new Role();
-            pharmacistRole.setName("PHARMACIST");
-            pharmacistRole.setDescription("Pharmacist with pharmacy access");
-            pharmacistRole.setPermissions(getPermissionsForRole("PHARMACIST"));
-            roleRepository.save(pharmacistRole);
+        createRoleIfAbsent("PHARMACIST", "Pharmacist with pharmacy access");
+        createRoleIfAbsent("RECEPTIONIST", "Receptionist with front desk access");
+        createRoleIfAbsent("LAB_TECHNICIAN", "Lab technician with laboratory access");
+        createRoleIfAbsent("BILLING_OFFICER", "Billing officer with finance access");
+        createRoleIfAbsent("HR_MANAGER", "HR manager with HR access");
+    }
 
-            // Create RECEPTIONIST role
-            Role receptionistRole = new Role();
-            receptionistRole.setName("RECEPTIONIST");
-            receptionistRole.setDescription("Receptionist with front desk access");
-            receptionistRole.setPermissions(getPermissionsForRole("RECEPTIONIST"));
-            roleRepository.save(receptionistRole);
-
-            // Create LAB_TECHNICIAN role
-            Role labTechnicianRole = new Role();
-            labTechnicianRole.setName("LAB_TECHNICIAN");
-            labTechnicianRole.setDescription("Lab technician with laboratory access");
-            labTechnicianRole.setPermissions(getPermissionsForRole("LAB_TECHNICIAN"));
-            roleRepository.save(labTechnicianRole);
-
-            // Create BILLING_OFFICER role
-            Role billingOfficerRole = new Role();
-            billingOfficerRole.setName("BILLING_OFFICER");
-            billingOfficerRole.setDescription("Billing officer with finance access");
-            billingOfficerRole.setPermissions(getPermissionsForRole("BILLING_OFFICER"));
-            roleRepository.save(billingOfficerRole);
-
-            // Create HR_MANAGER role
-            Role hrManagerRole = new Role();
-            hrManagerRole.setName("HR_MANAGER");
-            hrManagerRole.setDescription("HR manager with HR access");
-            hrManagerRole.setPermissions(getPermissionsForRole("HR_MANAGER"));
-            roleRepository.save(hrManagerRole);
-
-            log.info("Created 5 default non-medical roles.");
-        } else {
-            log.info("Non-medical roles already exist, skipping initialization.");
+    private void createRoleIfAbsent(String name, String description) {
+        if (roleRepository.findByName(name).isEmpty()) {
+            log.info("Creating {} role...", name);
+            Role role = new Role();
+            role.setName(name);
+            role.setDescription(description);
+            role.setPermissions(getPermissionsForRole(name));
+            roleRepository.save(role);
         }
     }
 
@@ -340,6 +319,141 @@ public class DataInitializer implements CommandLineRunner {
             log.info("Default nurse user created with username: nurse");
         } else {
             log.info("Nurse user already exists, skipping initialization.");
+        }
+    }
+
+    private void initializePharmacistUser() {
+        if (!userRepository.existsByUsername("pharmacist")) {
+            log.info("Creating default pharmacist user...");
+
+            Role pharmacistRole = roleRepository.findByName("PHARMACIST")
+                    .orElseThrow(() -> new RuntimeException("PHARMACIST role not found"));
+
+            User pharmacist = new User();
+            pharmacist.setUsername("pharmacist");
+            pharmacist.setPassword(passwordEncoder.encode("Pharmacist@123"));
+            pharmacist.setEmail("pharmacist@hospital.com");
+            pharmacist.setFirstName("Sarah");
+            pharmacist.setLastName("Connor");
+            pharmacist.setPhoneNumber("+1234567892");
+            pharmacist.setEnabled(true);
+            pharmacist.setAccountNonExpired(true);
+            pharmacist.setAccountNonLocked(true);
+            pharmacist.setCredentialsNonExpired(true);
+            pharmacist.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.APPROVED);
+            pharmacist.setRoles(Set.of(pharmacistRole));
+
+            userRepository.save(pharmacist);
+
+            log.info("Default pharmacist user created with username: pharmacist");
+        }
+    }
+
+    private void initializeLabTechnicianUser() {
+        if (!userRepository.existsByUsername("labtech")) {
+            log.info("Creating default lab technician user...");
+
+            Role labtechRole = roleRepository.findByName("LAB_TECHNICIAN")
+                    .orElseThrow(() -> new RuntimeException("LAB_TECHNICIAN role not found"));
+
+            User labtech = new User();
+            labtech.setUsername("labtech");
+            labtech.setPassword(passwordEncoder.encode("LabTech@123"));
+            labtech.setEmail("labtech@hospital.com");
+            labtech.setFirstName("Robert");
+            labtech.setLastName("Langdon");
+            labtech.setPhoneNumber("+1234567893");
+            labtech.setEnabled(true);
+            labtech.setAccountNonExpired(true);
+            labtech.setAccountNonLocked(true);
+            labtech.setCredentialsNonExpired(true);
+            labtech.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.APPROVED);
+            labtech.setRoles(Set.of(labtechRole));
+
+            userRepository.save(labtech);
+
+            log.info("Default labtech user created with username: labtech");
+        }
+    }
+
+    private void initializeBillingUser() {
+        if (!userRepository.existsByUsername("billing")) {
+            log.info("Creating default billing officer user...");
+
+            Role billingRole = roleRepository.findByName("BILLING_OFFICER")
+                    .orElseThrow(() -> new RuntimeException("BILLING_OFFICER role not found"));
+
+            User billing = new User();
+            billing.setUsername("billing");
+            billing.setPassword(passwordEncoder.encode("Billing@123"));
+            billing.setEmail("billing@hospital.com");
+            billing.setFirstName("Michael");
+            billing.setLastName("Scott");
+            billing.setPhoneNumber("+1234567894");
+            billing.setEnabled(true);
+            billing.setAccountNonExpired(true);
+            billing.setAccountNonLocked(true);
+            billing.setCredentialsNonExpired(true);
+            billing.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.APPROVED);
+            billing.setRoles(Set.of(billingRole));
+
+            userRepository.save(billing);
+
+            log.info("Default billing user created with username: billing");
+        }
+    }
+
+    private void initializeHrUser() {
+        if (!userRepository.existsByUsername("hr")) {
+            log.info("Creating default HR manager user...");
+
+            Role hrRole = roleRepository.findByName("HR_MANAGER")
+                    .orElseThrow(() -> new RuntimeException("HR_MANAGER role not found"));
+
+            User hrUser = new User();
+            hrUser.setUsername("hr");
+            hrUser.setPassword(passwordEncoder.encode("HrManager@123"));
+            hrUser.setEmail("hr@hospital.com");
+            hrUser.setFirstName("Toby");
+            hrUser.setLastName("Flenderson");
+            hrUser.setPhoneNumber("+1234567895");
+            hrUser.setEnabled(true);
+            hrUser.setAccountNonExpired(true);
+            hrUser.setAccountNonLocked(true);
+            hrUser.setCredentialsNonExpired(true);
+            hrUser.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.APPROVED);
+            hrUser.setRoles(Set.of(hrRole));
+
+            userRepository.save(hrUser);
+
+            log.info("Default HR user created with username: hr");
+        }
+    }
+
+    private void initializeReceptionistUser() {
+        if (!userRepository.existsByUsername("receptionist")) {
+            log.info("Creating default receptionist user...");
+
+            Role receptionistRole = roleRepository.findByName("RECEPTIONIST")
+                    .orElseThrow(() -> new RuntimeException("RECEPTIONIST role not found"));
+
+            User receptionist = new User();
+            receptionist.setUsername("receptionist");
+            receptionist.setPassword(passwordEncoder.encode("Receptionist@123"));
+            receptionist.setEmail("receptionist@hospital.com");
+            receptionist.setFirstName("Pam");
+            receptionist.setLastName("Beesly");
+            receptionist.setPhoneNumber("+1234567896");
+            receptionist.setEnabled(true);
+            receptionist.setAccountNonExpired(true);
+            receptionist.setAccountNonLocked(true);
+            receptionist.setCredentialsNonExpired(true);
+            receptionist.setApprovalStatus(com.act.hospitalmanagementsystem.auth.enums.ApprovalStatus.APPROVED);
+            receptionist.setRoles(Set.of(receptionistRole));
+
+            userRepository.save(receptionist);
+
+            log.info("Default receptionist user created with username: receptionist");
         }
     }
 }

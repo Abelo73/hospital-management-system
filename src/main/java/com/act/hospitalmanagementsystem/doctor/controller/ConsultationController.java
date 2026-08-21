@@ -33,6 +33,11 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationService.getPatientConsultations(patientId));
     }
 
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<ConsultationDTO>> getDoctorConsultations(@PathVariable UUID doctorId) {
+        return ResponseEntity.ok(consultationService.getDoctorConsultations(doctorId));
+    }
+
     @PostMapping("/{id}/finalize")
     public ResponseEntity<Void> finalizeConsultation(@PathVariable UUID id) {
         consultationService.finalizeConsultation(id);

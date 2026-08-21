@@ -27,6 +27,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, UUID> {
     @Query("SELECT a FROM Attendance a WHERE a.deleted = false AND a.date = :date")
     Page<Attendance> findByDate(@Param("date") LocalDate date, Pageable pageable);
 
+    @Query("SELECT a FROM Attendance a WHERE a.deleted = false AND a.date = :date")
+    List<Attendance> findByDate(@Param("date") LocalDate date);
+
     @Query("SELECT a FROM Attendance a WHERE a.deleted = false AND a.status = :status")
     Page<Attendance> findByStatus(@Param("status") AttendanceStatus status, Pageable pageable);
 }

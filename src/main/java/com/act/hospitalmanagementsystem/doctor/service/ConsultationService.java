@@ -95,6 +95,11 @@ public class ConsultationService {
         return consultationMapper.toDTOList(consultations);
     }
 
+    public List<ConsultationDTO> getDoctorConsultations(UUID doctorId) {
+        List<Consultation> consultations = consultationRepository.findByDoctorId(doctorId);
+        return consultationMapper.toDTOList(consultations);
+    }
+
     @Transactional
     public void finalizeConsultation(UUID id) {
         Consultation consultation = consultationRepository.findById(id)
